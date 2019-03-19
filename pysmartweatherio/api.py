@@ -37,7 +37,7 @@ def get_weather(requestURL, units):
     json = data_reponse.json()
     headers = data_reponse.headers
 
-    return WeatherData(json, data_reponse, headers, units)
+    return StationData(json, data_reponse, headers, units)
 
 def get_device(requestURL, units):
     data_reponse = requests.get(requestURL)
