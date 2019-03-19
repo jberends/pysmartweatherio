@@ -7,7 +7,7 @@ This module communicates with a Smart Home Weather station from the company [Wea
 They are both attached to a central hub, that broadcasts the data via UDP and sends the data to a cloud database managed by WeatherFlow. This module retrieves the data back from the cloud database.
 
 ## Functions
-The module exposes the following functions:
+The module exposes the following functions:<br>
 ***load_stationdata(stationid, apikey, units)*** - this will return a Data Class with all the data collected from a specific Station.<br>
 **stationid**<br>
 (string)(required) If you have your own Smart Weather Station, then you know your Station ID. If you don't have one, there are a lot of public stations available, and you can find one near you on [this link](https://smartweather.weatherflow.com/map). If you click on one of the stations on the map, you will see that the URL changes, locate the number right after */map/* - this is the Station ID<br>
