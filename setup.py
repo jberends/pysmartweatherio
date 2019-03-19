@@ -18,10 +18,10 @@ setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version='0.1.0',
 
-    description='Receive data from Smart Weather cia UDP',
+    description='Receive data from Smart Home Weather station via REST API',
     long_description=" ".join(
         ["Lightweight Python 2 and Python 3 module to receive data via",
-        "REST API from a Smart Weather station from WeatherFlow."]),
+        "REST API from a Smart Home Weather station from WeatherFlow."]),
 
     # The project's main homepage.
     url='https://github.com/briis/pysmartweatherio',
