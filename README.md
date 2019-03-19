@@ -8,7 +8,7 @@ They are both attached to a central hub, that broadcasts the data via UDP and se
 
 ## Functions
 The module exposes the following functions:<br>
-### load_stationdata(stationid, apikey, units)
+### load_stationdata(station_id, api_key, units)
 this will return a Data Class with all the data collected from a specific Station.<br>
 
 **station_id**<br>
@@ -20,4 +20,27 @@ this will return a Data Class with all the data collected from a specific Statio
 **units**<br>
 (string)(optional) The unit system to use. Metric or Imperial<br>
 Default value: Metric<br>
+
+**Data Class Definition**<br>
+* **temperature** - Current temperature
+* **feels_like_temperature** - How the temperature Feels Like. A combination of Heat Index and Wind Chill
+* **heat_index** - A temperature measurement combining Humidity and temperature. How hot does it feel. Only used when temperature is above 26.67°C (80°F)
+* **wind_chill** - How cold does it feel. Only used if temperature is below 10°C (50°F)
+* **dewpoint** - Dewpoint. The atmospheric temperature (varying according to pressure and humidity) below which water droplets begin to condense and dew can form
+* **wind_speed** - Current Wind Speed
+* **wind_gust** - Highest Wind Speed in the last minute
+* **wind_lull** - Lowest Wind Speed in the last minute
+* **wind_bearing** - Wind bearing in degrees (Example: 287°)
+* **wind_direction** - Wind bearing as directional text (Example: NNW)
+* **precipitation** - Precipitation since midnight
+* **precipitation_rate** - The current precipitation rate - 0 if it is not raining
+* **precipitation_last_1hr** - Precipitation in the last hour
+* **precipitation_last_24hr** - Precipitation in the last 24 hours.
+* **precipitation_yesterday** - Precipitation yesterday
+* **humidity** - Current humidity in %
+* **pressure** - Current barometric pressure, taking in to account the position of the station
+* **uv** - The UV index
+* **solar_radiation** - The current Solar Radiation measured in W/m2
+* **illuminance** - Shows the brightness in Lux
+* **lightning_count** - Shows the numbers of lightning strikes for last minute. Attributes of this sensor has more Lightning i
 <hr>
