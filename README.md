@@ -8,8 +8,10 @@ They are both attached to a central hub, that broadcasts the data via UDP and se
 
 ## Functions
 The module exposes the following functions:<br>
-***load_stationdata(stationid, apikey, units)*** - this will return a Data Class with all the data collected from a specific Station.<br>
-**stationid**<br>
+#### load_stationdata(stationid, apikey, units)
+this will return a Data Class with all the data collected from a specific Station.<br>
+
+**station_id**<br>
 (string)(required) If you have your own Smart Weather Station, then you know your Station ID. If you don't have one, there are a lot of public stations available, and you can find one near you on [this link](https://smartweather.weatherflow.com/map). If you click on one of the stations on the map, you will see that the URL changes, locate the number right after */map/* - this is the Station ID<br>
 
 **api_key**<br>
