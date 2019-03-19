@@ -8,7 +8,7 @@ They are both attached to a central hub, that broadcasts the data via UDP and se
 
 ## Functions
 The module exposes the following functions:<br>
-#### load_stationdata(stationid, apikey, units)
+### load_stationdata(stationid, apikey, units)
 this will return a Data Class with all the data collected from a specific Station.<br>
 
 **station_id**<br>
@@ -19,4 +19,5 @@ this will return a Data Class with all the data collected from a specific Statio
 
 **units**<br>
 (string)(optional) The unit system to use. Metric or Imperial<br>
-Default value: Metric
+Default value: Metric<br>
+<hr>
