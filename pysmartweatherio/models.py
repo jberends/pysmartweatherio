@@ -5,7 +5,7 @@ import requests
 from .utils import Conversion, PropertyUnavailable, UnicodeMixin
 
 
-class WeatherData(UnicodeMixin):
+class StationData(UnicodeMixin):
     def __init__(self, data, response, headers, units):
         self.response = response
         self.http_headers = headers

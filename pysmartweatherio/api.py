@@ -1,6 +1,6 @@
 import requests
 
-from .models import DeviceData, WeatherData
+from .models import DeviceData, StationData
 
 
 def _urlstation(stationid, apikey):
@@ -10,7 +10,7 @@ def _urlstation(stationid, apikey):
 def _urldevice(deviceid, apikey):
     return "https://swd.weatherflow.com/swd/rest/observations/device/{}?api_key={}".format(deviceid, apikey)
 
-def load_weatherdata(stationid, apikey, units='metric', callback=None):
+def load_stationdata(stationid, apikey, units='metric', callback=None):
     """
     This Function builds the URL and returns the
     data from WeatherFlow. You will need to supply a Station Id and
