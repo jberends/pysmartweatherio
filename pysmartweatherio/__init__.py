@@ -1,2 +1,5 @@
-""" Wrapper for the REST API from WeatherFlow. Extracting data from Smart Weather. """
+""" Communicates with a Smart Weather weatherstation from WeatherFlow using REST. """
 name = "pysmartweatherio"
+
+from .api import load_devicedata, load_weatherdata
+
