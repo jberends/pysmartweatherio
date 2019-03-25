@@ -38,7 +38,7 @@ class StationData(UnicodeMixin):
             Conversion.volume(float(self.json['obs'][0]['precip_accum_local_day']), self.units),
             int(self.json['obs'][0]['relative_humidity']),
             Conversion.rate(float(self.json['obs'][0]['precip']), self.units),
-            float(self.json['obs'][0]['precip']),
+            float(self.json['obs'][0]['precip']*60),
             Conversion.pressure(float(self.json['obs'][0]['station_pressure']), self.units),
             float(self.json['latitude']),
             float(self.json['longitude']),
