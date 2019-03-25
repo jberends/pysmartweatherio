@@ -38,7 +38,7 @@ class StationData(UnicodeMixin):
             Conversion.volume(float(self.json['obs'][0]['precip_accum_local_day']), self.units),
             int(self.json['obs'][0]['relative_humidity']),
             Conversion.rate(float(self.json['obs'][0]['precip']), self.units),
-            float(self.json['obs'][0]['precip']*60),
+            float(self.json['obs'][0]['precip']),
             Conversion.pressure(float(self.json['obs'][0]['station_pressure']), self.units),
             float(self.json['latitude']),
             float(self.json['longitude']),
@@ -124,7 +124,7 @@ class CurrentData:
         self.uv = uv
         self.precipitation = precipitation
         self.humidity = humidity
-        self.precipitation_rate = precipitation_rate
+        self.precipitation_rate = precipitation_rate * 60
         self.pressure = pressure
         self.latitude = latitude
         self.longitude = longitude
