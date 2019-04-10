@@ -23,15 +23,15 @@ class StationData(UnicodeMixin):
 
     def currentdata(self):
         dtformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
-        if not self.json['obs'][0]['lightning_strike_last_epoch']:
+        if 'lightning_strike_last_epoch' not in self.json['obs'][0]:
             liformat = "1970-01-01 00:00:00"
         else:
             liformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['lightning_strike_last_epoch']).strftime('%Y-%m-%d %H:%M:%S')
-        if not self.json['obs'][0]['precip_accum_local_yesterday']:
+        if 'precip_accum_local_yesterday' not in self.json['obs'][0]:
             precipyesterday = 0
         else:
             precipyesterday = self.json['obs'][0]['precip_accum_local_yesterday']
-        if not self.json['obs'][0]['lightning_strike_last_distance']:
+        if 'lightning_strike_last_distance' not in self.json['obs'][0]:
             lightniglast = 0
         else:
             lightniglast = self.json['obs'][0]['lightning_strike_last_distance']
