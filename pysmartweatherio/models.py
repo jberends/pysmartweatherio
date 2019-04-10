@@ -23,7 +23,19 @@ class StationData(UnicodeMixin):
 
     def currentdata(self):
         dtformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
-        liformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['lightning_strike_last_epoch']).strftime('%Y-%m-%d %H:%M:%S')
+        if not self.json['obs'][0]['lightning_strike_last_epoch']:
+            liformat = "1970-01-01 00:00:00"
+        else:
+            liformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['lightning_strike_last_epoch']).strftime('%Y-%m-%d %H:%M:%S')
+        if not self.json['obs'][0]['precip_accum_local_yesterday']:
+            precipyesterday = 0
+        else:
+            precipyesterday = self.json['obs'][0]['precip_accum_local_yesterday']
+        if not self.json['obs'][0]['lightning_strike_last_distance']:
+            lightniglast = 0
+        else:
+            lightniglast = self.json['obs'][0]['lightning_strike_last_distance']
+
         return CurrentData(
             self.json['station_name'],
             dtformat,
@@ -47,11 +59,11 @@ class StationData(UnicodeMixin):
             self.json['obs'][0]['dew_point'],
             Conversion.volume(float(self.json['obs'][0]['precip_accum_last_1hr']), self.units),
             Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units),
-            Conversion.volume(float(self.json['obs'][0]['precip_accum_local_yesterday']), self.units),
+            Conversion.volume(float(precipyesterday), self.units),
             int(self.json['obs'][0]['solar_radiation']),
             int(self.json['obs'][0]['brightness']),
             liformat,
-            Conversion.distance(self.json['obs'][0]['lightning_strike_last_distance'], self.units),
+            Conversion.distance(lightniglast, self.units),
             int(self.json['obs'][0]['lightning_strike_count']),
             int(self.json['obs'][0]['lightning_strike_count_last_3hr'])
             )
