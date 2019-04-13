@@ -23,49 +23,104 @@ class StationData(UnicodeMixin):
 
     def currentdata(self):
         dtformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
-        if 'lightning_strike_last_epoch' not in self.json['obs'][0]:
-            liformat = "1970-01-01 00:00:00"
+
+        # If SKY module is present convert values else 0
+        if 'precip' not in self.json['obs'][0]:
+            feels_like = 0
+            wind_avg = 0
+            wind_bearing = 0
+            wind_direction = "N"
+            wind_gust = 0
+            wind_lull = 0
+            uv = 0
+            precip_accum_local_day = 0
+            precip_rate = 0
+            precip = 0
+            wind_chill = 0
+            precip_accum_last_1hr = 0
+            precip_accum_last_24hr = 0
+            solar_radiation = 0
+            brightness = 0
+            precip_accum_local_yesterday = 0
         else:
-            liformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['lightning_strike_last_epoch']).strftime('%Y-%m-%d %H:%M:%S')
-        if 'precip_accum_local_yesterday' not in self.json['obs'][0]:
-            precipyesterday = 0
+            feels_like = self.json['obs'][0]['feels_like']
+            wind_avg = Conversion.speed(float(self.json['obs'][0]['wind_avg']), self.units)
+            wind_bearing = int(self.json['obs'][0]['wind_direction'])
+            wind_direction = Conversion.wind_direction(self.json['obs'][0]['wind_direction'])
+            wind_gust = Conversion.speed(float(self.json['obs'][0]['wind_gust']), self.units)
+            wind_lull = Conversion.speed(float(self.json['obs'][0]['wind_lull']), self.units)
+            uv = float(self.json['obs'][0]['uv'])
+            precip_accum_local_day = Conversion.volume(float(self.json['obs'][0]['precip_accum_local_day']), self.units)
+            precip_rate = Conversion.rate(float(self.json['obs'][0]['precip']), self.units)
+            precip = float(self.json['obs'][0]['precip'])
+            wind_chill = self.json['obs'][0]['wind_chill']
+            precip_accum_last_1hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_1hr']), self.units)
+            precip_accum_last_24hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units)
+            solar_radiation = int(self.json['obs'][0]['solar_radiation'])
+            brightness = int(self.json['obs'][0]['brightness'])
+            if 'precip_accum_local_yesterday' not in self.json['obs'][0]:
+                precip_accum_local_yesterday = 0
+            else:
+                precip_accum_local_yesterday = Conversion.volume(float(self.json['obs'][0]['precip_accum_local_yesterday'], self.units)
+
+        # If AIR module is present convert values else 0
+        if 'air_temperature' not in self.json['obs'][0]:
+            air_temperature = 0
+            relative_humidity = 0
+            station_pressure = 0
+            heat_index = 0
+            dew_point = 0
+            lightning_strike_count = 0
+            lightning_strike_count_last_3hr = 0
+            lightning_strike_last_distance = 0
+            lightning_strike_last_epoch = "1970-01-01 00:00:00"
         else:
-            precipyesterday = self.json['obs'][0]['precip_accum_local_yesterday']
-        if 'lightning_strike_last_distance' not in self.json['obs'][0]:
-            lightniglast = 0
-        else:
-            lightniglast = self.json['obs'][0]['lightning_strike_last_distance']
+            air_temperature = self.json['obs'][0]['air_temperature']
+            relative_humidity = int(self.json['obs'][0]['relative_humidity'])
+            station_pressure = Conversion.pressure(float(self.json['obs'][0]['station_pressure']), self.units)
+            heat_index = self.json['obs'][0]['heat_index']
+            dew_point = self.json['obs'][0]['dew_point']
+            lightning_strike_count = int(self.json['obs'][0]['lightning_strike_count'])
+            lightning_strike_count_last_3hr = int(self.json['obs'][0]['lightning_strike_count_last_3hr'])
+            if 'lightning_strike_last_distance' not in self.json['obs'][0]:
+                lightning_strike_last_distance = 0
+            else:
+                lightning_strike_last_distance = Conversion.distance(self.json['obs'][0]['lightning_strike_last_distance'], self.units)
+            if 'lightning_strike_last_epoch' not in self.json['obs'][0]:
+                lightning_strike_last_epoch = "1970-01-01 00:00:00"
+            else:
+                lightning_strike_last_epoch = datetime.datetime.fromtimestamp(self.json['obs'][0]['lightning_strike_last_epoch']).strftime('%Y-%m-%d %H:%M:%S')
 
         return CurrentData(
             self.json['station_name'],
             dtformat,
-            self.json['obs'][0]['air_temperature'],
-            self.json['obs'][0]['feels_like'],
-            Conversion.speed(float(self.json['obs'][0]['wind_avg']), self.units),
-            int(self.json['obs'][0]['wind_direction']),
-            Conversion.wind_direction(self.json['obs'][0]['wind_direction']),
-            Conversion.speed(float(self.json['obs'][0]['wind_gust']), self.units),
-            Conversion.speed(float(self.json['obs'][0]['wind_lull']), self.units),
-            float(self.json['obs'][0]['uv']),
-            Conversion.volume(float(self.json['obs'][0]['precip_accum_local_day']), self.units),
-            int(self.json['obs'][0]['relative_humidity']),
-            Conversion.rate(float(self.json['obs'][0]['precip']), self.units),
-            float(self.json['obs'][0]['precip']),
-            Conversion.pressure(float(self.json['obs'][0]['station_pressure']), self.units),
+            air_temperature,
+            feels_like,
+            wind_avg,
+            wind_bearing,
+            wind_direction,
+            wind_gust,
+            wind_lull,
+            uv,
+            precip_accum_local_day,
+            relative_humidity,
+            precip_rate,
+            precip,
+            station_pressure,
             float(self.json['latitude']),
             float(self.json['longitude']),
-            self.json['obs'][0]['heat_index'],
-            self.json['obs'][0]['wind_chill'],
-            self.json['obs'][0]['dew_point'],
-            Conversion.volume(float(self.json['obs'][0]['precip_accum_last_1hr']), self.units),
-            Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units),
-            Conversion.volume(float(precipyesterday), self.units),
-            int(self.json['obs'][0]['solar_radiation']),
-            int(self.json['obs'][0]['brightness']),
-            liformat,
-            Conversion.distance(lightniglast, self.units),
-            int(self.json['obs'][0]['lightning_strike_count']),
-            int(self.json['obs'][0]['lightning_strike_count_last_3hr'])
+            heat_index,
+            wind_chill,
+            dew_point,
+            precip_accum_last_1hr,
+            precip_accum_last_24hr,
+            precip_accum_local_yesterday,
+            solar_radiation,
+            brightness,
+            lightning_strike_last_epoch,
+            lightning_strike_last_distance,
+            lightning_strike_count,
+            lightning_strike_count_last_3hr
             )
 
 class DeviceData(UnicodeMixin):
