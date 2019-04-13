@@ -23,10 +23,6 @@ class StationData(UnicodeMixin):
 
     def currentdata(self):
         dtformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
-        if 'precip_accum_local_yesterday' not in self.json['obs'][0]:
-            precipyesterday = 0
-        else:
-            precipyesterday = self.json['obs'][0]['precip_accum_local_yesterday']
 
         # If SKY module is present convert values else 0
         if 'precip' not in self.json['obs'][0]:
