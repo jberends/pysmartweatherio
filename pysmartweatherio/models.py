@@ -37,7 +37,6 @@ class StationData(UnicodeMixin):
             precip = 0
             wind_chill = 0
             precip_accum_last_1hr = 0
-            precip_accum_last_24hr = 0
             solar_radiation = 0
             brightness = 0
             precip_accum_local_yesterday = 0
@@ -54,7 +53,7 @@ class StationData(UnicodeMixin):
             precip = float(self.json['obs'][0]['precip'])
             wind_chill = self.json['obs'][0]['wind_chill']
             precip_accum_last_1hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_1hr']), self.units)
-            precip_accum_last_24hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units)
+            # precip_accum_last_24hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units)
             solar_radiation = int(self.json['obs'][0]['solar_radiation'])
             brightness = int(self.json['obs'][0]['brightness'])
             if 'precip_accum_local_yesterday' not in self.json['obs'][0]:
@@ -112,7 +111,6 @@ class StationData(UnicodeMixin):
             wind_chill,
             dew_point,
             precip_accum_last_1hr,
-            precip_accum_last_24hr,
             precip_accum_local_yesterday,
             solar_radiation,
             brightness,
@@ -175,7 +173,7 @@ class CurrentData:
     """ Returns an Array with Current Weather Observations. """
     def __init__(self, station_location, timestamp, temperature, feels_like, wind_speed, wind_bearing, wind_direction, wind_gust, wind_lull,
                  uv, precipitation,humidity, precipitation_rate, rain_rate_raw, pressure, latitude, longitude, heat_index, wind_chill, dewpoint,
-                 precipitation_last_1hr, precipitation_last_24hr, precipitation_yesterday, solar_radiation, brightness,lightning_time,
+                 precipitation_last_1hr, precipitation_yesterday, solar_radiation, brightness,lightning_time,
                  lightning_distance, lightning_count,lightning_count_3hour
                  ):
         self.station_location = station_location
@@ -198,7 +196,6 @@ class CurrentData:
         self.wind_chill = wind_chill
         self.dewpoint = dewpoint
         self.precipitation_last_1hr = precipitation_last_1hr
-        self.precipitation_last_24hr = precipitation_last_24hr
         self.precipitation_yesterday = precipitation_yesterday
         self.solar_radiation = solar_radiation
         self.illuminance = brightness
