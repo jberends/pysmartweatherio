@@ -35,7 +35,6 @@ Default value: Metric<br>
 * **precipitation** - Precipitation since midnight
 * **precipitation_rate** - The current precipitation rate - 0 if it is not raining
 * **precipitation_last_1hr** - Precipitation in the last hour
-* **precipitation_last_24hr** - Precipitation in the last 24 hours.
 * **precipitation_yesterday** - Precipitation yesterday
 * **humidity** - Current humidity in %
 * **pressure** - Current barometric pressure, taking in to account the position of the station
