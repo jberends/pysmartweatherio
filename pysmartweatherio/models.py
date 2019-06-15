@@ -112,7 +112,6 @@ class StationData(UnicodeMixin):
             wind_chill,
             dew_point,
             precip_accum_last_1hr,
-            precip_accum_last_24hr,
             precip_accum_local_yesterday,
             solar_radiation,
             brightness,
