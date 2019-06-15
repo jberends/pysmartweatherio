@@ -54,7 +54,7 @@ class StationData(UnicodeMixin):
             precip = float(self.json['obs'][0]['precip'])
             wind_chill = self.json['obs'][0]['wind_chill']
             precip_accum_last_1hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_1hr']), self.units)
-            precip_accum_last_24hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units)
+            # precip_accum_last_24hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units)
             solar_radiation = int(self.json['obs'][0]['solar_radiation'])
             brightness = int(self.json['obs'][0]['brightness'])
             if 'precip_accum_local_yesterday' not in self.json['obs'][0]:
