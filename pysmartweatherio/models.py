@@ -24,7 +24,7 @@ class StationData(UnicodeMixin):
     def currentdata(self):
         dtformat = datetime.datetime.fromtimestamp(self.json['obs'][0]['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
         # If SKY module is present convert values else 0
-        if 'precip' not in self.json['obs'][0]:
+        if 'feels_like' not in self.json['obs'][0]:
             feels_like = 0
             wind_avg = 0
             wind_bearing = 0
