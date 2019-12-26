@@ -35,6 +35,8 @@ class StationData(UnicodeMixin):
             precip_accum_local_day = 0
             precip_rate = 0
             precip = 0
+            precip_minutes_local_day = 0
+            precip_minutes_local_yesterday = 0
             wind_chill = 0
             precip_accum_last_1hr = 0
             solar_radiation = 0
@@ -53,6 +55,8 @@ class StationData(UnicodeMixin):
             precip = float(self.json['obs'][0]['precip'])
             wind_chill = self.json['obs'][0]['wind_chill']
             precip_accum_last_1hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_1hr']), self.units)
+            precip_minutes_local_day = float(self.json['obs'][0]['precip_minutes_local_day'])
+            precip_minutes_local_yesterday = float(self.json['obs'][0]['precip_minutes_local_yesterday'])
             # precip_accum_last_24hr = Conversion.volume(float(self.json['obs'][0]['precip_accum_last_24hr']), self.units)
             solar_radiation = int(self.json['obs'][0]['solar_radiation'])
             brightness = int(self.json['obs'][0]['brightness'])
@@ -117,7 +121,9 @@ class StationData(UnicodeMixin):
             lightning_strike_last_epoch,
             lightning_strike_last_distance,
             lightning_strike_count,
-            lightning_strike_count_last_3hr
+            lightning_strike_count_last_3hr,
+            precip_minutes_local_day,
+            precip_minutes_local_yesterday
             )
 
 class DeviceData(UnicodeMixin):
@@ -174,7 +180,7 @@ class CurrentData:
     def __init__(self, station_location, timestamp, temperature, feels_like, wind_speed, wind_bearing, wind_direction, wind_gust, wind_lull,
                  uv, precipitation,humidity, precipitation_rate, rain_rate_raw, pressure, latitude, longitude, heat_index, wind_chill, dewpoint,
                  precipitation_last_1hr, precipitation_yesterday, solar_radiation, brightness,lightning_time,
-                 lightning_distance, lightning_count,lightning_count_3hour
+                 lightning_distance, lightning_count,lightning_count_3hour,precip_minutes_local_day, precip_minutes_local_yesterday
                  ):
         self.station_location = station_location
         self.timestamp = timestamp
@@ -203,6 +209,8 @@ class CurrentData:
         self.lightning_distance = lightning_distance
         self.lightning_count = lightning_count
         self.lightning_last_3hr = lightning_count_3hour
+        self.precip_minutes_local_day = precip_minutes_local_day
+        self.precip_minutes_local_yesterday = precip_minutes_local_yesterday
 
         """ Binary Sensor Values """
         self.raining = True if rain_rate_raw > 0 else False
