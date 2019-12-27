@@ -1,4 +1,5 @@
 import sys
+import datetime
 
 
 class UnicodeMixin(object):
@@ -29,7 +30,7 @@ class Conversion:
     Distance: km
     """
 
-    def temperature(value, unit):
+    def temperature(self, value, unit):
         if unit.lower() == 'imperial':
             # Return value F
             return round((value*9/5)+32,1)
@@ -37,7 +38,7 @@ class Conversion:
             # Return value C
             return round(value,1)
 
-    def volume(value, unit):
+    def volume(self, value, unit):
         if unit.lower() == 'imperial':
             # Return value in
             return round(value * 0.0393700787,2)
@@ -45,7 +46,7 @@ class Conversion:
             # Return value mm
             return round(value,1)
 
-    def rate(value, unit):
+    def rate(self, value, unit):
         if unit.lower() == 'imperial':
             # Return value in
             return round(value * 0.0393700787,2)
@@ -53,7 +54,7 @@ class Conversion:
             # Return value mm
             return round(value,2)
 
-    def pressure(value, unit):
+    def pressure(self, value, unit):
         if unit.lower() == 'imperial':
             # Return value inHg
             return round(value * 0.0295299801647,3)
@@ -61,7 +62,7 @@ class Conversion:
             # Return value mb
             return round(value,1)
 
-    def speed(value, unit):
+    def speed(self, value, unit):
         if unit.lower() == 'imperial':
             # Return value in mi/h
             return round(value*2.2369362921,1)
@@ -69,7 +70,7 @@ class Conversion:
             # Return value in m/s
             return round(value,1)
 
-    def distance(value, unit):
+    def distance(self, value, unit):
         if unit.lower() == 'imperial':
             # Return value in mi
             return round(value*0.621371192,1)
@@ -77,7 +78,13 @@ class Conversion:
             # Return value in m/s
             return round(value,0)
 
-    def wind_direction(bearing):
+    def wind_direction(self, bearing):
         direction_array = ['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N']
         direction = direction_array[int((bearing + 11.25) / 22.5)]
         return direction
+
+    def epoch_to_datetime(self, value):
+        """Converts EPOC time to Date Time String."""
+        timestring = datetime.datetime.fromtimestamp(int(value)).strftime('%Y-%m-%d %H:%M:%S')
+        return timestring
+

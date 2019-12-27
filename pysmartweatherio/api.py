@@ -5,7 +5,6 @@ from .models import DeviceData, StationData
 
 def _urlstation(stationid, apikey):
     return "https://swd.weatherflow.com/swd/rest/observations/station/{}?api_key={}".format(stationid, apikey)
-#    return 'https://swd.weatherflow.com/swd/rest/observations/station/' + str(stationid) + '?api_key=' + str(apikey)
 
 def _urldevice(deviceid, apikey):
     return "https://swd.weatherflow.com/swd/rest/observations/device/{}?api_key={}".format(deviceid, apikey)
