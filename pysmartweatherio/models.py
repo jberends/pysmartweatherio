@@ -28,40 +28,46 @@ class StationData(UnicodeMixin):
         if self.json is None:
             return False
 
+        # Prevent Module to fail if no devices are Online
+        if len(self.json['obs']) == 0:
+            obsdata = {"nodata": "NoData"}
+        else:
+            obsdata = self.json['obs'][0]
+
         station_name = self.json['station_name']
         latitude = float(self.json['latitude'])
         longitude = float(self.json['longitude'])
-        time_stamp = '1970-01-01 00:00:00' if 'timestamp' not in self.json['obs'][0] else cnv.epoch_to_datetime(self.json['obs'][0]['timestamp'])
+        time_stamp = '1970-01-01 00:00:00' if 'timestamp' not in obsdata else cnv.epoch_to_datetime(obsdata['timestamp'])
 
         # SKY Module
-        feels_like = 0 if 'feels_like' not in self.json['obs'][0] else cnv.temperature(self.json['obs'][0]['feels_like'], self.units)
-        wind_avg = 0 if 'wind_avg' not in self.json['obs'][0] else cnv.speed(self.json['obs'][0]['wind_avg'], self.units)
-        wind_bearing = 0 if 'wind_direction' not in self.json['obs'][0] else self.json['obs'][0]['wind_direction']
-        wind_direction = '-' if 'wind_direction' not in self.json['obs'][0] else cnv.wind_direction(self.json['obs'][0]['wind_direction'])
-        wind_gust = 0 if 'wind_gust' not in self.json['obs'][0] else cnv.speed(self.json['obs'][0]['wind_gust'], self.units)
-        wind_lull = 0 if 'wind_lull' not in self.json['obs'][0] else cnv.speed(self.json['obs'][0]['wind_lull'], self.units)
-        uv = 0 if 'uv' not in self.json['obs'][0] else self.json['obs'][0]['uv']
-        precip_accum_local_day = 0 if 'precip_accum_local_day' not in self.json['obs'][0] else cnv.volume(self.json['obs'][0]['precip_accum_local_day'],self.units)
-        precip_rate = 0 if 'precip' not in self.json['obs'][0] else cnv.rate(self.json['obs'][0]['precip'],self.units)
+        feels_like = 0 if 'feels_like' not in obsdata else cnv.temperature(obsdata['feels_like'], self.units)
+        wind_avg = 0 if 'wind_avg' not in obsdata else cnv.speed(obsdata['wind_avg'], self.units)
+        wind_bearing = 0 if 'wind_direction' not in obsdata else obsdata['wind_direction']
+        wind_direction = '-' if 'wind_direction' not in obsdata else cnv.wind_direction(obsdata['wind_direction'])
+        wind_gust = 0 if 'wind_gust' not in obsdata else cnv.speed(obsdata['wind_gust'], self.units)
+        wind_lull = 0 if 'wind_lull' not in obsdata else cnv.speed(obsdata['wind_lull'], self.units)
+        uv = 0 if 'uv' not in obsdata else obsdata['uv']
+        precip_accum_local_day = 0 if 'precip_accum_local_day' not in obsdata else cnv.volume(obsdata['precip_accum_local_day'],self.units)
+        precip_rate = 0 if 'precip' not in obsdata else cnv.rate(obsdata['precip'],self.units)
         precip = precip_rate
-        wind_chill = 0 if 'wind_chill' not in self.json['obs'][0] else cnv.temperature(self.json['obs'][0]['wind_chill'], self.units)
-        precip_accum_last_1hr = 0 if 'precip_accum_last_1hr' not in self.json['obs'][0] else cnv.volume(self.json['obs'][0]['precip_accum_last_1hr'],self.units)
-        precip_minutes_local_day = 0 if 'precip_minutes_local_day' not in self.json['obs'][0] else self.json['obs'][0]['precip_minutes_local_day']
-        precip_minutes_local_yesterday = 0 if 'precip_minutes_local_yesterday' not in self.json['obs'][0] else self.json['obs'][0]['precip_minutes_local_yesterday']
-        solar_radiation = 0 if 'solar_radiation' not in self.json['obs'][0] else self.json['obs'][0]['solar_radiation']
-        brightness = 0 if 'brightness' not in self.json['obs'][0] else self.json['obs'][0]['brightness']
-        precip_accum_local_yesterday = 0 if 'precip_accum_local_yesterday' not in self.json['obs'][0] else cnv.volume(self.json['obs'][0]['precip_accum_local_yesterday'],self.units)
+        wind_chill = 0 if 'wind_chill' not in obsdata else cnv.temperature(obsdata['wind_chill'], self.units)
+        precip_accum_last_1hr = 0 if 'precip_accum_last_1hr' not in obsdata else cnv.volume(obsdata['precip_accum_last_1hr'],self.units)
+        precip_minutes_local_day = 0 if 'precip_minutes_local_day' not in obsdata else obsdata['precip_minutes_local_day']
+        precip_minutes_local_yesterday = 0 if 'precip_minutes_local_yesterday' not in obsdata else obsdata['precip_minutes_local_yesterday']
+        solar_radiation = 0 if 'solar_radiation' not in obsdata else obsdata['solar_radiation']
+        brightness = 0 if 'brightness' not in obsdata else obsdata['brightness']
+        precip_accum_local_yesterday = 0 if 'precip_accum_local_yesterday' not in obsdata else cnv.volume(obsdata['precip_accum_local_yesterday'],self.units)
 
         # AIR Module
-        air_temperature = 0 if 'air_temperature' not in self.json['obs'][0] else cnv.temperature(self.json['obs'][0]['air_temperature'],self.units)
-        station_pressure = 0 if 'station_pressure' not in self.json['obs'][0] else cnv.pressure(self.json['obs'][0]['station_pressure'], self.units)
-        relative_humidity = 0 if 'relative_humidity' not in self.json['obs'][0] else self.json['obs'][0]['relative_humidity']
-        lightning_strike_last_epoch = 0 if 'lightning_strike_last_epoch' not in self.json['obs'][0] else cnv.epoch_to_datetime(self.json['obs'][0]['lightning_strike_last_epoch'])
-        lightning_strike_last_distance = 0 if 'lightning_strike_last_distance' not in self.json['obs'][0] else cnv.distance(self.json['obs'][0]['lightning_strike_last_distance'], self.units)
-        lightning_strike_count = 0 if 'lightning_strike_count' not in self.json['obs'][0] else self.json['obs'][0]['lightning_strike_count']
-        lightning_strike_count_last_3hr = 0 if 'lightning_strike_count_last_3hr' not in self.json['obs'][0] else self.json['obs'][0]['lightning_strike_count_last_3hr']
-        heat_index = 0 if 'heat_index' not in self.json['obs'][0] else cnv.temperature(self.json['obs'][0]['heat_index'], self.units)
-        dew_point = 0 if 'dew_point' not in self.json['obs'][0] else cnv.temperature(self.json['obs'][0]['dew_point'], self.units)
+        air_temperature = 0 if 'air_temperature' not in obsdata else cnv.temperature(obsdata['air_temperature'],self.units)
+        station_pressure = 0 if 'station_pressure' not in obsdata else cnv.pressure(obsdata['station_pressure'], self.units)
+        relative_humidity = 0 if 'relative_humidity' not in obsdata else obsdata['relative_humidity']
+        lightning_strike_last_epoch = 0 if 'lightning_strike_last_epoch' not in obsdata else cnv.epoch_to_datetime(obsdata['lightning_strike_last_epoch'])
+        lightning_strike_last_distance = 0 if 'lightning_strike_last_distance' not in obsdata else cnv.distance(obsdata['lightning_strike_last_distance'], self.units)
+        lightning_strike_count = 0 if 'lightning_strike_count' not in obsdata else obsdata['lightning_strike_count']
+        lightning_strike_count_last_3hr = 0 if 'lightning_strike_count_last_3hr' not in obsdata else obsdata['lightning_strike_count_last_3hr']
+        heat_index = 0 if 'heat_index' not in obsdata else cnv.temperature(obsdata['heat_index'], self.units)
+        dew_point = 0 if 'dew_point' not in obsdata else cnv.temperature(obsdata['dew_point'], self.units)
 
         return CurrentData(
             station_name,
