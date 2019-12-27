@@ -31,7 +31,7 @@ class StationData(UnicodeMixin):
         station_name = self.json['station_name']
         latitude = float(self.json['latitude'])
         longitude = float(self.json['longitude'])
-        time_stamp = cnv.epoch_to_datetime(self.json['obs'][0]['timestamp'])
+        time_stamp = '1970-01-01 00:00:00' if 'timestamp' not in self.json['obs'][0]['timestamp'] else cnv.epoch_to_datetime(self.json['obs'][0]['timestamp'])
 
         # SKY Module
         feels_like = 0 if 'feels_like' not in self.json['obs'][0] else cnv.temperature(self.json['obs'][0]['feels_like'], self.units)
