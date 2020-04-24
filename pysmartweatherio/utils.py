@@ -49,7 +49,7 @@ class Conversion:
     def rate(self, value, unit):
         if unit.lower() == 'imperial':
             # Return value in
-            return round(value * 0.0393700787,2)
+            return float(value * 0.0393700787)
         else:
             # Return value mm
             return round(value,2)
