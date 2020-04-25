@@ -49,7 +49,7 @@ class StationData(UnicodeMixin):
         uv = 0 if 'uv' not in obsdata else obsdata['uv']
         precip_accum_local_day = 0 if 'precip_accum_local_day' not in obsdata else cnv.volume(obsdata['precip_accum_local_day'],self.units)
         precip_rate = 0 if 'precip' not in obsdata else cnv.rate(obsdata['precip'],self.units)
-        precip = precip_rate
+        precip = 0 if 'precip' not in obsdata else obsdata['precip']
         wind_chill = 0 if 'wind_chill' not in obsdata else cnv.temperature(obsdata['wind_chill'], self.units)
         precip_accum_last_1hr = 0 if 'precip_accum_last_1hr' not in obsdata else cnv.volume(obsdata['precip_accum_last_1hr'],self.units)
         precip_minutes_local_day = 0 if 'precip_minutes_local_day' not in obsdata else obsdata['precip_minutes_local_day']
@@ -170,7 +170,7 @@ class CurrentData:
         self.uv = uv
         self.precipitation = precipitation
         self.humidity = humidity
-        self.precipitation_rate = precipitation_rate * 60
+        self.precipitation_rate = precipitation_rate
         self.pressure = pressure
         self.latitude = latitude
         self.longitude = longitude
@@ -189,7 +189,7 @@ class CurrentData:
         self.precip_minutes_local_yesterday = precip_minutes_local_yesterday
 
         """ Binary Sensor Values """
-        self.raining = True if rain_rate_raw > 0 else False
+        self.raining = True if rain_rate_raw  > 0 else False
         self.freezing = True if temperature < 0 else False
         self.lightning = True if lightning_count > 0 else False
 
