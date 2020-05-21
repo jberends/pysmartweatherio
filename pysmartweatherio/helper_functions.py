@@ -9,6 +9,7 @@ from pysmartweatherio.const import (
     UNIT_TEMP_CELCIUS,
     UNIT_TEMP_FAHRENHEIT,
     UNIT_PRESSURE_HPA,
+    UNIT_PRESSURE_MB,
     UNIT_PRESSURE_INHG,
     UNIT_PRECIP_IN,
     UNIT_PRECIP_MM,
@@ -34,6 +35,9 @@ class ConversionFunctions:
     async def pressure(self, value, from_unit, to_unit) -> float:
         """Convert Pressure Value."""
         if from_unit == UNIT_PRESSURE_HPA:
+            from_unit = UNIT_PRESSURE_MB
+
+        if from_unit == UNIT_PRESSURE_MB:
             return value if to_unit == UNIT_PRESSURE_HPA else round(value * 0.030,2)
         else:
             return value if to_unit == UNIT_PRESSURE_INHG else round(value * 33.86, 1)
