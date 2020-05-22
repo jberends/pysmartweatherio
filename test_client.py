@@ -62,6 +62,7 @@ async def main() -> None:
                 "RAINING: " + str(row.raining) + "\n" +
                 "SOLAR RADIATION: " + str(row.solar_radiation) + "\n" +
                 "STATION PRESSURE: " + str(row.station_pressure) + "\n" +
+                "STATION NAME: " + str(row.station_name) + "\n" +
                 "TIMESTAMP: " + row.timestamp + "\n" +
                 "UV: " + str(row.uv) + "\n" +
                 "WIND AVG: " + str(row.wind_avg) + "\n" +

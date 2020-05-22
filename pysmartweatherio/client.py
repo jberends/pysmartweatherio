@@ -69,9 +69,11 @@ class SmartWeather:
             self._to_units_distance = UNIT_DISTANCE_MI
 
     async def get_station_name(self) -> None:
+        """Returns the Station Name."""
         return await self._station_name_by_station_id()
 
     async def get_station_data(self) -> None:
+        """Returns current sensor data."""
         return await self._current_station_data()
 
     async def get_units(self) -> None:
@@ -122,6 +124,8 @@ class SmartWeather:
             from_units_direction = row["units_direction"]
             from_units_other = row["units_other"]
 
+        station_name = json_data.get("station_name")
+
         cnv = ConversionFunctions()
         items = []
         observations = json_data.get("obs")
@@ -159,6 +163,7 @@ class SmartWeather:
                 "relative_humidity": 0 if "relative_humidity" not in row else row["relative_humidity"],
                 "station_pressure": 0 if "station_pressure" not in row else
                 await cnv.pressure(row["station_pressure"], from_units_pressure, self._to_units_pressure),
+                "station_name": station_name,
                 "solar_radiation": 0 if "solar_radiation" not in row else row["solar_radiation"],
                 "timestamp": None if "timestamp" not in row else
                 await cnv.epoch_to_datetime(row["timestamp"]),
