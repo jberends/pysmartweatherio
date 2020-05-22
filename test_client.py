@@ -39,28 +39,37 @@ async def main() -> None:
         _LOGGER.info("GETTING STATION DATA:")
         data = await smartweather.get_station_data()
         for row in data:
-            _LOGGER.info(f"{row.timestamp} - {row.air_temperature} - {row.station_pressure} - {row.wind_avg} - {row.precip_rate} - {row.relative_humidity}% - {row.wind_direction} - {row.lightning_strike_last_time}")
-
-        # _LOGGER.info("GETTING CURRENT DATA:")
-        # data = await wbit.async_get_current_data()
-        # for row in data:
-        #     _LOGGER.info(f"{row.datetime} - {row.sunrise} - {row.sunset} - {row.is_night}")
-
-        # _LOGGER.info("GETTING DAILY FORECAST DATA:")
-        # data = await wbit.async_get_forecast_daily()
-        # for row in data:
-        #     _LOGGER.info(f"{row.city_name} - {row.valid_date} - {row.weather_text} - {row.max_temp}")
-
-        # NOTE: Unmark if you have a paid API Key
-        # _LOGGER.info("GETTING HOURLY FORECAST DATA:")
-        # data = await wbit.async_get_forecast_hourly()
-        # for row in data:
-        #     _LOGGER.info(f"{row.city_name} - {row.timestamp} - {row.weather_text} - {row.temp}")
-
-        # _LOGGER.info("GETTING WEATHER ALERTS:")
-        # data = await wbit.async_get_weather_alerts()
-        # for row in data:
-        #     _LOGGER.info(f"{row.city_name} - {row.title}")
+            _LOGGER.info("\n" +
+                "AIR DENSITY: " + str(row.air_density) + "\n" +
+                "TEMPERATURE: " + str(row.air_temperature) + "\n" +
+                "BRIGHTNESS: " + str(row.brightness) + "\n" +
+                "DEW POINT: " + str(row.dew_point) + "\n" +
+                "FEELS LIKE: " + str(row.feels_like) + "\n" +
+                "FREEZING: " + str(row.freezing) + "\n" +
+                "HEAT INDEX: " + str(row.heat_index) + "\n" +
+                "LIGHTNING: " + str(row.lightning) + "\n" +
+                "LIGHTNING TIME: " + row.lightning_strike_last_time + "\n" +
+                "LIGHTNING DISTANCE: " + str(row.lightning_strike_last_distance) + "\n" +
+                "LIGHTNING COUNT: " + str(row.lightning_strike_count) + "\n" +
+                "LIGHTNING COUNT 3 HOURS: " + str(row.lightning_strike_count_last_3hr) + "\n" +
+                "RAIN LAST HOUR: " + str(row.precip_accum_last_1hr) + "\n" +
+                "RAIN TODAY: " + str(row.precip_accum_local_day) + "\n" +
+                "RAIN YESTERDAY: " + str(row.precip_accum_local_yesterday) + "\n" +
+                "RAIN RATE: " + str(row.precip_rate) + "\n" +
+                "RAIN MINUTES TODAY: " + str(row.precip_minutes_local_day) + "\n" +
+                "RAIN MINUTES YESTERDAY: " + str(row.precip_minutes_local_yesterday) + "\n" +
+                "HUMIDITY: " + str(row.relative_humidity) + "\n" +
+                "RAINING: " + str(row.raining) + "\n" +
+                "SOLAR RADIATION: " + str(row.solar_radiation) + "\n" +
+                "STATION PRESSURE: " + str(row.station_pressure) + "\n" +
+                "TIMESTAMP: " + row.timestamp + "\n" +
+                "UV: " + str(row.uv) + "\n" +
+                "WIND AVG: " + str(row.wind_avg) + "\n" +
+                "WIND BEARING: " + str(row.wind_bearing) + "\n" +
+                "WIND CHILL: " + str(row.wind_chill) + "\n" +
+                "WIND GUST: " + str(row.wind_gust) + "\n" +
+                "WIND DIRECTION: " + str(row.wind_direction)
+            )
 
     except SmartWeatherError as err:
         _LOGGER.info(err)

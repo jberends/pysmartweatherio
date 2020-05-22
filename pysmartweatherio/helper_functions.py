@@ -28,9 +28,9 @@ class ConversionFunctions:
     async def temperature(self, value, from_unit, to_unit) -> float:
         """Convert Temperature Value."""
         if from_unit == UNIT_TEMP_CELCIUS:
-            return value if to_unit == UNIT_TEMP_CELCIUS else round((value * 9 / 5) + 32, 1)
+            return value if to_unit == UNIT_TEMP_CELCIUS else (value * 9 / 5) + 32
         else:
-            return value if to_unit == UNIT_TEMP_FAHRENHEIT else round((value - 32) / 1.8, 1)
+            return value if to_unit == UNIT_TEMP_FAHRENHEIT else (value - 32) / 1.8
 
     async def pressure(self, value, from_unit, to_unit) -> float:
         """Convert Pressure Value."""
@@ -38,9 +38,9 @@ class ConversionFunctions:
             from_unit = UNIT_PRESSURE_MB
 
         if from_unit == UNIT_PRESSURE_MB:
-            return value if to_unit == UNIT_PRESSURE_HPA else round(value * 0.030,2)
+            return value if to_unit == UNIT_PRESSURE_HPA else value * 0.030
         else:
-            return value if to_unit == UNIT_PRESSURE_INHG else round(value * 33.86, 1)
+            return value if to_unit == UNIT_PRESSURE_INHG else value * 33.86
 
     async def wind(self, value, from_unit, to_unit) -> float:
         """Convert Wind Speed Value."""
@@ -52,21 +52,21 @@ class ConversionFunctions:
             else:
                 return round(value * 2.24, 1)
         else:
-            return value if to_unit == UNIT_WIND_MPH else round(value * 9 / 20, 1)
+            return value if to_unit == UNIT_WIND_MPH else value * 9 / 20
 
     async def precip(self, value, from_unit, to_unit) -> float:
         """Convert Precipitation Value."""
         if from_unit == UNIT_PRECIP_MM:
-            return value if to_unit == UNIT_PRECIP_MM else round(value * 0.04 ,1)
+            return value if to_unit == UNIT_PRECIP_MM else value * 0.04
         else:
-            return value if to_unit == UNIT_PRECIP_IN else round(value * 25.4, 1)
+            return value if to_unit == UNIT_PRECIP_IN else value * 25.4
 
     async def distance(self, value, from_unit, to_unit) -> float:
         """Convert Distance Value."""
         if from_unit == UNIT_DISTANCE_KM:
-            return value if to_unit == UNIT_DISTANCE_KM else round(value * 0.62 ,1)
+            return value if to_unit == UNIT_DISTANCE_KM else value * 0.62
         else:
-            return value if to_unit == UNIT_DISTANCE_MI else round(value * 1.61, 1)
+            return value if to_unit == UNIT_DISTANCE_MI else value * 1.61
 
     async def epoch_to_datetime(self, value) -> str:
         """Converts EPOC time to Date Time String."""
