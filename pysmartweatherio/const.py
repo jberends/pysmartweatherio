@@ -4,6 +4,12 @@ BASE_URL = "https://swd.weatherflow.com/swd/rest/observations"
 
 DEFAULT_TIMEOUT = 10
 
+UNIT_TYPE_TEMP = "temperature"
+UNIT_TYPE_WIND = "wind"
+UNIT_TYPE_RAIN = "rain"
+UNIT_TYPE_PRESSURE = "pressure"
+UNIT_TYPE_DISTANCE = "distance"
+
 UNIT_SYSTEM_METRIC = "metric"
 UNIT_SYSTEM_IMPERIAL = "imperial"
 UNIT_TEMP_CELCIUS = "c"

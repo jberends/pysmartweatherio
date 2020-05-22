@@ -11,4 +11,9 @@ from pysmartweatherio.const import (
     UNIT_WIND_MS,
     UNIT_WIND_KMH,
     UNIT_WIND_MPH,
+    UNIT_TYPE_TEMP,
+    UNIT_TYPE_WIND,
+    UNIT_TYPE_RAIN,
+    UNIT_TYPE_PRESSURE,
+    UNIT_TYPE_DISTANCE,
 )
