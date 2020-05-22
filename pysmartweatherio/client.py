@@ -112,21 +112,6 @@ class SmartWeather:
         endpoint = f"station/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
 
-        # if self._to_units == UNIT_SYSTEM_METRIC:
-        #     to_units_temp = UNIT_TEMP_CELCIUS
-        #     to_units_pressure = UNIT_PRESSURE_HPA
-        #     to_units_wind = UNIT_WIND_MS
-        #     if self._to_wind_unit == UNIT_WIND_KMH:
-        #         to_units_wind = UNIT_WIND_KMH
-        #     to_units_precip = UNIT_PRECIP_MM
-        #     to_units_distance = UNIT_DISTANCE_KM
-        # else:
-        #     to_units_temp = UNIT_TEMP_FAHRENHEIT
-        #     to_units_pressure = UNIT_PRESSURE_INHG
-        #     to_units_wind = UNIT_WIND_MPH
-        #     to_units_precip = UNIT_PRECIP_IN
-        #     to_units_distance = UNIT_DISTANCE_MI
-
         row = json_data.get("station_units")
         if row is not None:
             from_units_temp = row["units_temp"]
