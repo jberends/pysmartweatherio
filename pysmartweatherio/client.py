@@ -6,7 +6,7 @@ from typing import Optional
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError
 
-from pysmartweatherio.errors import InvalidApiKey, RequestError
+from pysmartweatherio.errors import InvalidApiKey, RequestError, ResultError
 from pysmartweatherio.helper_functions import ConversionFunctions
 from pysmartweatherio.dataclasses import StationData
 from pysmartweatherio.const import (
@@ -164,8 +164,10 @@ class SmartWeather:
         except asyncio.TimeoutError:
             raise RequestError("Request to endpoint timed out: {endpoint}")
         except ClientError as err:
-            if err.message == "Forbidden":
+            if err.message == "Unauthorized":
                 raise InvalidApiKey("Your API Key is invalid or does not support this operation")
+            elif err.message == "Not Found":
+                raise ResultError("The Station ID does not exist")
             else:
                 raise RequestError(
                     f"Error requesting data from {endpoint}: {err}"

@@ -4,7 +4,7 @@
 # from .api import load_devicedata, load_stationdata
 
 from pysmartweatherio.client import SmartWeather
-from pysmartweatherio.errors import SmartWeatherError
+from pysmartweatherio.errors import SmartWeatherError, InvalidApiKey, RequestError, ResultError
 from pysmartweatherio.const import (
     UNIT_SYSTEM_IMPERIAL,
     UNIT_SYSTEM_METRIC,
