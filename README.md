@@ -28,35 +28,43 @@ Default value: mps<br>
 ### get_station_hardware()
 Returns a JSON array with information about the Station Hardware.<br>
 
-* **station_name** The name of the Station as set by the User
+* **station_name** The name of the Station as set by the Owner
 * **serial_number** The serial number of the HUB Device
 * **device_id** A unique device ID of the HUB Device
 * **firmware_revision** The current firmware revision of the HUB Device
 
 ### get_station_data()
-Returns a JSON array with current sensor values of the associated AIR and SKY or TEMPEST modules.<br>
+Returns a Data Class with current sensor values of the associated AIR and SKY or TEMPEST modules.<br>
 
+* **air_density** - Current Air Density
 * **air_temperature** - Current temperature
+* **brightness** - Shows the brightness in Lux
 * **dew_point** - Dewpoint. The atmospheric temperature (varying according to pressure and humidity) below which water 
 * **feels_like** - How the temperature Feels Like. A combination of Heat Index and Wind Chill
+* **freezing** - Is True when *air_temperature* is below zero, else False
 * **heat_index** - A temperature measurement combining Humidity and temperature. How hot does it feel. Only used when temperature is above 26.67°C (80°F)
+* **lightning** - Is True when *lightning_strike_count* is above zero, else False
+* **lightning_strike_last_time** - The time when the last lightning strike occured. 
+* **lightning_strike_last_distance** - The distance away of the last lightning strike. 
+* **lightning_strike_count** - Shows the numbers of lightning strikes for last minute. 
+* **lightning_strike_count_last_3hr** - Shows the numbers of lightning strikes for last 3 hours. 
+* **precip_accum_last_1hr** - Precipitation in the last hour
+* **precip_accum_local_day** - Precipitation since midnight
+* **precip_accum_local_yesterday** - Precipitation yesterday
+* **precip_rate** - The current precipitation rate - 0 if it is not raining
+* **precip_minutes_local_day** - Number of minutes it has been raining for the current day
+* **precip_minutes_local_yesterday** - Number of minutes it has been raining yesterday
+* **raining** - Is True when *precip_rate* is above zero, else False
+* **relative_humidity** - Current humidity in %
+* **solar_radiation** - The current Solar Radiation measured in W/m2
+* **station_pressure** - Current barometric pressure, taking in to account the position of the station
+* **station_name** - Name of the station as supplied by the owner
+* **timestamp** - The time of the last update
+* **uv** - The UV index
 * **wind_avg** - Current Average Wind Speed
 * **wind_bearing** - Wind bearing in degrees (Example: 287°)
 * **wind_chill** - How cold does it feel. Only used if temperature is below 10°C (50°F)
 droplets begin to condense and dew can form
 * **wind_direction** - Wind bearing as directional text (Example: NNW)
 * **wind_gust** - Highest Wind Speed in the last minute
-* **wind_lull** - Lowest Wind Speed in the last minute
-* **precip_accum_local_day** - Precipitation since midnight
-* **precip_rate** - The current precipitation rate - 0 if it is not raining
-* **precip_accum_last_1hr** - Precipitation in the last hour
-* **precip_accum_local_yesterday** - Precipitation yesterday
-* **precip_minutes_local_day** - Number of minutes it has been raining for the current day
-* **precip_minutes_local_yesterday** - Number of minutes it has been raining yesterday
-* **station_pressure** - Current barometric pressure, taking in to account the position of the station
-* **relative_humidity** - Current humidity in %
-* **uv** - The UV index
-* **solar_radiation** - The current Solar Radiation measured in W/m2
-* **brightness** - Shows the brightness in Lux
-* **lightning_strike_count** - Shows the numbers of lightning strikes for last minute. 
 
