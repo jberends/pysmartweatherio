@@ -1,6 +1,6 @@
 """Constant Definitions for SmartWeather."""
 
-BASE_URL = "https://swd.weatherflow.com/swd/rest/observations"
+BASE_URL = "https://swd.weatherflow.com/swd/rest"
 
 DEFAULT_TIMEOUT = 10
 

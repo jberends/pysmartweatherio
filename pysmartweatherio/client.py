@@ -76,6 +76,10 @@ class SmartWeather:
         """Returns current sensor data."""
         return await self._current_station_data()
 
+    async def get_station_hardware(self) -> None:
+        """Returns station hardware data."""
+        return await self._station_information()
+
     async def get_units(self) -> None:
         """Returns the units used for Values."""
         if self._to_units == UNIT_SYSTEM_METRIC:
@@ -102,16 +106,34 @@ class SmartWeather:
         }
         return units
 
+    async def _station_information(self) -> None:
+        """Return Information about the station HW."""
+        endpoint = f"stations/{self._station_id}?api_key={self._api_key}"
+        json_data = await self.async_request("get", endpoint)
+
+        for row in json_data["stations"]:
+            name = row["name"]
+            for item in row["devices"]:
+                if item["device_type"] == "HB":
+                    items = {
+                        "station_name": name,
+                        "serial_number": item["serial_number"],
+                        "device_id": item["device_id"],
+                        "firmware_revision": item["firmware_revision"],
+                    }
+                    return items
+
+
     async def _station_name_by_station_id(self) -> None:
         """Return Station name from the Station ID."""
-        endpoint = f"station/{self._station_id}?api_key={self._api_key}"
+        endpoint = f"observations/station/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
 
         return self._station_id if json_data.get("station_name") is None else json_data.get("station_name")
 
     async def _current_station_data(self) -> None:
         """Return current observation data for the Station."""
-        endpoint = f"station/{self._station_id}?api_key={self._api_key}"
+        endpoint = f"observations/station/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
 
         row = json_data.get("station_units")

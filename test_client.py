@@ -37,6 +37,9 @@ async def main() -> None:
         # _LOGGER.info(f"STATION: {station_name}")
 
         _LOGGER.info("GETTING STATION DATA:")
+        data = await smartweather.get_station_hardware()
+        print(data)
+
         data = await smartweather.get_station_data()
         for row in data:
             _LOGGER.info("\n" +
