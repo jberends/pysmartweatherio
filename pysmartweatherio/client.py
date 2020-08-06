@@ -52,6 +52,8 @@ class SmartWeather:
         self._to_wind_unit = to_wind_unit
         self._session: ClientSession = session
         self.req = session
+        self._latitude = None
+        self._longitude = None
 
         if self._to_units == UNIT_SYSTEM_METRIC:
             self._to_units_temp = UNIT_TEMP_CELCIUS
@@ -201,7 +203,14 @@ class SmartWeather:
             items.append(StationData(item))
 
         return items
-            
+
+    async def _forecast_data_daily(self) -> None:
+        """Return Daily Forecast data for the Station."""
+        endpoint = f"better_forecast?station_id={self._station_id}&api_key={self._api_key}&lat={self._latitude}&lon={self._longitude}"
+        json_data = await self.async_request("get", endpoint)
+
+        forecast = json_data.get("forecast")
+        
     async def async_request(self, method: str, endpoint: str) -> dict:
         """Make a request against the SmartWeather API."""
 
