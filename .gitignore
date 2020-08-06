@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 pysmartweatherio.code-workspace
 .DS_Store
+forecast.json
