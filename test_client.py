@@ -32,9 +32,9 @@ async def main() -> None:
     start = time.time()
 
     try:
-        _LOGGER.info("GETTING STATION NAME:")
-        station_name = await smartweather.get_station_name()
-        _LOGGER.info(f"STATION: {station_name}")
+        # _LOGGER.info("GETTING STATION NAME:")
+        # station_name = await smartweather.get_station_name()
+        # _LOGGER.info(f"STATION: {station_name}")
 
         _LOGGER.info("GETTING STATION DATA:")
         data = await smartweather.get_station_hardware()

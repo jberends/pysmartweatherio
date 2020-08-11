@@ -116,23 +116,31 @@ class SmartWeather:
         for row in json_data["stations"]:
             items = {}
             name = row["name"]
+            self._latitude = row["latitude"]
+            self._longitude = row["longitude"]
             for item in row["devices"]:
                 if "device_type" in item:
                     if item["device_type"] == "HB":
                         items = {
                             "station_name": name,
+                            "latitude": self._latitude,
+                            "longitude": self._longitude,
                             "station_type": "AIR & SKY",
                             "serial_number": item["serial_number"],
                             "device_id": item["device_id"],
                             "firmware_revision": item["firmware_revision"],
+                            "hardware_revision": item["hardware_revision"],
                         }
                     if item["device_type"] == "ST":
                         items = {
                             "station_name": name,
+                            "latitude": self._latitude,
+                            "longitude": self._longitude,
                             "station_type": "Tempest",
                             "serial_number": item["serial_number"],
                             "device_id": item["device_id"],
                             "firmware_revision": item["firmware_revision"],
+                            "hardware_revision": item["hardware_revision"],
                         }
                         break
 
