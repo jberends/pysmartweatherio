@@ -90,6 +90,14 @@ class SmartWeather:
         """Returns station Weather Forecast."""
         return await self._forecast_data(forecast_type, hours_to_show)
 
+    async def get_daily_forecast(self) -> None:
+        """Returns station Weather Forecast."""
+        return await self._forecast_data(FORECAST_TYPE_DAILY, 0)
+
+    async def get_hourly_forecast(self) -> None:
+        """Returns station Weather Forecast."""
+        return await self._forecast_data(FORECAST_TYPE_HOURLY, 72)
+
     async def get_units(self) -> None:
         """Returns the units used for Values."""
         if self._to_units == UNIT_SYSTEM_METRIC:
