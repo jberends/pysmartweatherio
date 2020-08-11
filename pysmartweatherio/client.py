@@ -112,18 +112,32 @@ class SmartWeather:
         """Return Information about the station HW."""
         endpoint = f"stations/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
-
+        
         for row in json_data["stations"]:
+            items = {}
             name = row["name"]
             for item in row["devices"]:
-                if item["device_type"] == "HB":
-                    items = {
-                        "station_name": name,
-                        "serial_number": item["serial_number"],
-                        "device_id": item["device_id"],
-                        "firmware_revision": item["firmware_revision"],
-                    }
-                    return items
+                if "device_type" in item:
+                    if item["device_type"] == "HB":
+                        items = {
+                            "station_name": name,
+                            "station_type": "AIR & SKY",
+                            "serial_number": item["serial_number"],
+                            "device_id": item["device_id"],
+                            "firmware_revision": item["firmware_revision"],
+                        }
+                    if item["device_type"] == "ST":
+                        items = {
+                            "station_name": name,
+                            "station_type": "Tempest",
+                            "serial_number": item["serial_number"],
+                            "device_id": item["device_id"],
+                            "firmware_revision": item["firmware_revision"],
+                        }
+                        break
+
+            if items:
+                return items
 
 
     async def _station_name_by_station_id(self) -> None:
