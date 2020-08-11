@@ -245,22 +245,50 @@ class SmartWeather:
         json_data = await self.async_request("get", endpoint)
         items = []
 
+        # We need a few Items from the Current Conditions section
+        current_cond = json_data.get("current_conditions")
+        current_condition = current_cond["conditions"]
+        current_icon = current_cond["icon"]
+        today = datetime.now()
+
         forecast = json_data.get("forecast")
         if forecast_type == FORECAST_TYPE_DAILY:
             for row in forecast[FORECAST_TYPE_DAILY]:
+                # Skip over past forecasts - seems the API sometimes returns old forecasts
+                forecast_time = datetime.fromtimestamp(row["day_start_local"])
+                if today > forecast_time:
+                    continue
+
+                # Calculate data from hourly that's not summed up in the daily.
+                precip = 0
+                wind_avg = []
+                wind_bearing = []
+                for hourly in forecast['hourly']:
+                    if hourly['local_day'] == row['day_num']:
+                        precip += hourly["precip"]
+                        wind_avg.append(hourly['wind_avg'])
+                        wind_bearing.append(hourly['wind_direction'])
+                sum_wind_avg = sum(wind_avg) / len(wind_avg)
+                sum_wind_bearing = sum(wind_bearing) / len(wind_bearing)
+
                 item = {
-                    "timestamp": datetime.fromtimestamp(row["day_start_local"]),
+                    "timestamp": forecast_time,
                     "conditions": row["conditions"],
                     "icon": row["icon"],
                     "sunrise": datetime.fromtimestamp(row["sunrise"]),
                     "sunset": datetime.fromtimestamp(row["sunset"]),
-                    "air_temp_high": await cnv.temperature(row["air_temp_high"], UNIT_TEMP_CELCIUS, self._to_units_temp),
-                    "air_temp_low": await cnv.temperature(row["air_temp_low"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                    "air_temp_high": row["air_temp_high"],
+                    "air_temp_low": row["air_temp_low"],
                     "air_temp_high_color": row["air_temp_high_color"],
                     "air_temp_low_color": row["air_temp_low_color"],
+                    "precip": await cnv.precip(precip, UNIT_PRECIP_MM, self._to_units_precip),
                     "precip_probability": row["precip_probability"],
                     "precip_icon": row["precip_icon"],
                     "precip_type": row["precip_type"],
+                    "wind_avg": await cnv.wind(sum_wind_avg, UNIT_WIND_MS, self._to_units_wind),
+                    "wind_bearing": sum_wind_bearing,
+                    "current_condition": current_condition,
+                    "current_icon": current_icon,
                 }
                 items.append(ForecastDataDaily(item))
         else:
@@ -270,7 +298,7 @@ class SmartWeather:
                     "timestamp": datetime.fromtimestamp(row["time"]),
                     "conditions": row["conditions"],
                     "icon": row["icon"],
-                    "air_temperature": await cnv.temperature(row["air_temperature"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                    "air_temperature": row["air_temperature"],
                     "sea_level_pressure": await cnv.pressure(row["sea_level_pressure"], UNIT_PRESSURE_MB, self._to_units_pressure),
                     "relative_humidity": row["relative_humidity"],
                     "precip": await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip),
@@ -285,7 +313,9 @@ class SmartWeather:
                     "wind_direction_cardinal": row["wind_direction_cardinal"],
                     "wind_direction_icon": row["wind_direction_icon"],
                     "uv": row["uv"],
-                    "feels_like": await cnv.temperature(row["feels_like"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                    "feels_like": row["feels_like"],
+                    "current_condition": current_condition,
+                    "current_icon": current_icon,
                 }
                 items.append(ForecastDataHourly(item))
                 # Only take the first 24 hours

@@ -207,9 +207,14 @@ class ForecastDataDaily:
         self._temp_low = data["air_temp_low"]
         self._temp_high_color = data["air_temp_high_color"]
         self._temp_low_color = data["air_temp_low_color"]
+        self._precip = data["precip"]
         self._precip_probability = data["precip_probability"]
         self._precip_icon = data["precip_icon"]
         self._precip_type = data["precip_type"]
+        self._wind_avg = data["wind_avg"]
+        self._wind_bearing = data["wind_bearing"]
+        self._current_condition = data["current_condition"]
+        self._current_icon = data["current_icon"]
 
     @property
     def timestamp(self) -> dt:
@@ -255,6 +260,11 @@ class ForecastDataDaily:
     def temp_low_color(self) -> float:
         """Return Low temperature color."""
         return self._temp_low_color
+
+    @property
+    def precip(self) -> float:
+        """Return Precipitation."""
+        return self._precip
         
     @property
     def precip_probability(self) -> int:
@@ -270,6 +280,26 @@ class ForecastDataDaily:
     def precip_type(self) -> str:
         """Precipitation Icon."""
         return self._precip_type
+
+    @property
+    def wind_avg(self) -> float:
+        """Return Wind Speed Average."""
+        return round(self._wind_avg,2)
+
+    @property
+    def wind_bearing(self) -> int:
+        """Return Wind Bearing in degrees."""
+        return int(self._wind_bearing)
+
+    @property
+    def current_condition(self) -> str:
+        """Return Current condition text."""
+        return self._current_condition
+
+    @property
+    def current_icon(self) -> str:
+        """Current Condition Icon."""
+        return self._current_icon
 
 class ForecastDataHourly:
     """A representation of Hour Based Forecast Weather Data."""
@@ -294,6 +324,8 @@ class ForecastDataHourly:
         self._wind_direction_icon = data["wind_direction_icon"]
         self._uv = data["uv"]
         self._feels_like = data["feels_like"]
+        self._current_condition = data["current_condition"]
+        self._current_icon = data["current_icon"]
 
     @property
     def timestamp(self) -> dt:
@@ -389,3 +421,13 @@ class ForecastDataHourly:
     def feels_like(self) -> float:
         """Return Feels Like Temperature."""
         return self._feels_like
+
+    @property
+    def current_condition(self) -> str:
+        """Return Current condition text."""
+        return self._current_condition
+
+    @property
+    def current_icon(self) -> str:
+        """Current Condition Icon."""
+        return self._current_icon
