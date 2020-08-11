@@ -302,6 +302,11 @@ class SmartWeather:
         else:
             cnt = 0
             for row in forecast[FORECAST_TYPE_HOURLY]:
+                # Skip over past forecasts - seems the API sometimes returns old forecasts
+                forecast_time = datetime.fromtimestamp(row["time"])
+                if today > forecast_time:
+                    continue
+
                 item = {
                     "timestamp": datetime.fromtimestamp(row["time"]),
                     "conditions": row["conditions"],
@@ -326,7 +331,7 @@ class SmartWeather:
                     "current_icon": current_icon,
                 }
                 items.append(ForecastDataHourly(item))
-                # Only take the first 24 hours
+                # Limit number of Hours
                 cnt += 1
                 if cnt >= hours_to_show:
                     break
