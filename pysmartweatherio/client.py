@@ -2,13 +2,14 @@
 import asyncio
 import logging
 from typing import Optional
+from datetime import datetime
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError
 
 from pysmartweatherio.errors import InvalidApiKey, RequestError, ResultError
 from pysmartweatherio.helper_functions import ConversionFunctions
-from pysmartweatherio.dataclasses import StationData
+from pysmartweatherio.dataclasses import StationData, ForecastData
 from pysmartweatherio.const import (
     BASE_URL,
     DEFAULT_TIMEOUT,
@@ -30,6 +31,8 @@ from pysmartweatherio.const import (
     UNIT_TYPE_RAIN,
     UNIT_TYPE_PRESSURE,
     UNIT_TYPE_DISTANCE,
+    FORECAST_TYPE_DAILY,
+    FORECAST_TYPE_HOURLY,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -81,6 +84,10 @@ class SmartWeather:
     async def get_station_hardware(self) -> None:
         """Returns station hardware data."""
         return await self._station_information()
+
+    async def get_forecast(self, forecast_type=FORECAST_TYPE_DAILY) -> None:
+        """Returns station Weather Forecast."""
+        return await self._forecast_data(forecast_type)
 
     async def get_units(self) -> None:
         """Returns the units used for Values."""
@@ -226,12 +233,37 @@ class SmartWeather:
 
         return items
 
-    async def _forecast_data_daily(self) -> None:
-        """Return Daily Forecast data for the Station."""
+    async def _forecast_data(self, forecast_type) -> None:
+        """Return Forecast data for the Station."""
+        if self._latitude is None:
+            # _LOGGER.debug(f"LAT: {self._latitude}")
+            await self._station_information()
+
+        cnv = ConversionFunctions()
         endpoint = f"better_forecast?station_id={self._station_id}&api_key={self._api_key}&lat={self._latitude}&lon={self._longitude}"
         json_data = await self.async_request("get", endpoint)
+        items = []
 
         forecast = json_data.get("forecast")
+        for row in forecast[forecast_type]:
+            dt_object = datetime.fromtimestamp(row["day_start_local"])
+            item = {
+                "timestamp": dt_object,
+                "conditions": row["conditions"],
+                "icon": row["icon"],
+                "sunrise": datetime.fromtimestamp(row["sunrise"]),
+                "sunset": datetime.fromtimestamp(row["sunset"]),
+                "air_temp_high": await cnv.temperature(row["air_temp_high"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                "air_temp_low": await cnv.temperature(row["air_temp_low"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                "air_temp_high_color": row["air_temp_high_color"],
+                "air_temp_low_color": row["air_temp_low_color"],
+                "precip_probability": row["precip_probability"],
+                "precip_icon": row["precip_icon"],
+                "precip_type": row["precip_type"],
+            }
+            items.append(ForecastData(item))
+
+        return items
         
     async def async_request(self, method: str, endpoint: str) -> dict:
         """Make a request against the SmartWeather API."""

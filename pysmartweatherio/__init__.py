@@ -16,4 +16,7 @@ from pysmartweatherio.const import (
     UNIT_TYPE_RAIN,
     UNIT_TYPE_PRESSURE,
     UNIT_TYPE_DISTANCE,
+    FORECAST_TYPES,
+    FORECAST_TYPE_DAILY,
+    FORECAST_TYPE_HOURLY,
 )

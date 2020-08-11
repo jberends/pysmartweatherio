@@ -1,4 +1,6 @@
 """Defines the Data Classes used."""
+from datetime import datetime as dt
+import datetime
 
 class StationData:
     """A representation of all data available for a specific Station ID."""
@@ -191,3 +193,80 @@ class StationData:
         direction_array = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW","N"]
         direction = direction_array[int((self._wind_bearing + 11.25) / 22.5)]
         return direction
+
+class ForecastData:
+    """A representation of Forecast Weather Data."""
+
+    def __init__(self, data):
+        self._timestamp = data["timestamp"]
+        self._conditions = data["conditions"]
+        self._icon = data["icon"]
+        self._sunrise = data["sunrise"]
+        self._sunset = data["sunset"]
+        self._temp_high = data["air_temp_high"]
+        self._temp_low = data["air_temp_low"]
+        self._temp_high_color = data["air_temp_high_color"]
+        self._temp_low_color = data["air_temp_low_color"]
+        self._precip_probability = data["precip_probability"]
+        self._precip_icon = data["precip_icon"]
+        self._precip_type = data["precip_type"]
+
+    @property
+    def timestamp(self) -> dt:
+        """Forecast DateTime."""
+        return self._timestamp.isoformat()
+
+    @property
+    def conditions(self) -> str:
+        """Return condition text ."""
+        return self._conditions
+
+    @property
+    def icon(self) -> str:
+        """Condition Icon."""
+        return self._icon
+
+    @property
+    def sunrise(self) -> dt:
+        """Return Sunrise Time for Location ."""
+        return self._sunrise.isoformat()
+
+    @property
+    def sunset(self) -> dt:
+        """Return Sunset Time for Location ."""
+        return self._sunset.isoformat()
+
+    @property
+    def temp_high(self) -> float:
+        """Return High temperature."""
+        return self._temp_high
+
+    @property
+    def temp_low(self) -> float:
+        """Return Low temperature."""
+        return self._temp_low
+
+    @property
+    def temp_high_color(self) -> str:
+        """Return High temperature color."""
+        return self._temp_high_color
+
+    @property
+    def temp_low_color(self) -> float:
+        """Return Low temperature color."""
+        return self._temp_low_color
+        
+    @property
+    def precip_probability(self) -> int:
+        """Precipitation Probability."""
+        return self._precip_probability
+
+    @property
+    def precip_icon(self) -> str:
+        """Precipitation Icon."""
+        return self._precip_icon
+
+    @property
+    def precip_type(self) -> str:
+        """Precipitation Icon."""
+        return self._precip_type

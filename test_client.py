@@ -19,7 +19,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 API_KEY = "20c70eae-e62f-4d3b-b3a4-8586e90f3ac8"
-STATION_ID = 3943
+STATION_ID = 2777 #3943
 TO_UNITS = UNIT_SYSTEM_METRIC
 TO_WIND_UNIT = UNIT_WIND_MS # Will be ignored if UNITS = Imperial
 
@@ -36,9 +36,9 @@ async def main() -> None:
         # station_name = await smartweather.get_station_name()
         # _LOGGER.info(f"STATION: {station_name}")
 
-        _LOGGER.info("GETTING STATION DATA:")
-        data = await smartweather.get_station_hardware()
-        print(data)
+        # _LOGGER.info("GETTING STATION DATA:")
+        # data = await smartweather.get_station_hardware()
+        # print(data)
 
         # data = await smartweather.get_station_data()
         # for row in data:
@@ -74,6 +74,24 @@ async def main() -> None:
         #         "WIND GUST: " + str(row.wind_gust) + "\n" +
         #         "WIND DIRECTION: " + str(row.wind_direction)
         #     )
+
+        _LOGGER.info("GETTING DAILY FORECAST DATA:")
+        data = await smartweather.get_forecast()
+        for row in data:
+            _LOGGER.info("\n" +
+                "TIME: " + str(row.timestamp) + "\n" +
+                "CONDITIONS: " + str(row.conditions) + "\n" +
+                "ICON: " + str(row.icon) + "\n" +
+                "SUNRISE: " + str(row.sunrise) + "\n" +
+                "SUNSET " + str(row.sunset) + "\n" +
+                "TEMP HIGH: " + str(row.temp_high) + "\n" +
+                "TEMP LOW: " + str(row.temp_low) + "\n" +
+                "TEMP HIGH COLOR: " + str(row.temp_high_color) + "\n" +
+                "TEMP LOW COLOR: " + str(row.temp_low_color) + "\n" +
+                "PRECIP PROBABILITY: " + str(row.precip_probability) + "\n" +
+                "PRECIP ICON: " + str(row.precip_icon) + "\n" +
+                "PRECIP TYPE: " + str(row.precip_type) + "\n"
+            )
 
     except SmartWeatherError as err:
         _LOGGER.info(err)
