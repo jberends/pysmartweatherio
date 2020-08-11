@@ -9,7 +9,7 @@ from aiohttp.client_exceptions import ClientError
 
 from pysmartweatherio.errors import InvalidApiKey, RequestError, ResultError
 from pysmartweatherio.helper_functions import ConversionFunctions
-from pysmartweatherio.dataclasses import StationData, ForecastData
+from pysmartweatherio.dataclasses import StationData, ForecastDataDaily, ForecastDataHourly
 from pysmartweatherio.const import (
     BASE_URL,
     DEFAULT_TIMEOUT,
@@ -17,6 +17,7 @@ from pysmartweatherio.const import (
     UNIT_SYSTEM_IMPERIAL,
     UNIT_TEMP_CELCIUS,
     UNIT_TEMP_FAHRENHEIT,
+    UNIT_PRESSURE_MB,
     UNIT_PRESSURE_HPA,
     UNIT_PRESSURE_INHG,
     UNIT_PRECIP_IN,
@@ -85,9 +86,9 @@ class SmartWeather:
         """Returns station hardware data."""
         return await self._station_information()
 
-    async def get_forecast(self, forecast_type=FORECAST_TYPE_DAILY) -> None:
+    async def get_forecast(self, forecast_type=FORECAST_TYPE_DAILY, hours_to_show=24) -> None:
         """Returns station Weather Forecast."""
-        return await self._forecast_data(forecast_type)
+        return await self._forecast_data(forecast_type, hours_to_show)
 
     async def get_units(self) -> None:
         """Returns the units used for Values."""
@@ -233,7 +234,7 @@ class SmartWeather:
 
         return items
 
-    async def _forecast_data(self, forecast_type) -> None:
+    async def _forecast_data(self, forecast_type, hours_to_show) -> None:
         """Return Forecast data for the Station."""
         if self._latitude is None:
             # _LOGGER.debug(f"LAT: {self._latitude}")
@@ -245,23 +246,52 @@ class SmartWeather:
         items = []
 
         forecast = json_data.get("forecast")
-        for row in forecast[forecast_type]:
-            dt_object = datetime.fromtimestamp(row["day_start_local"])
-            item = {
-                "timestamp": dt_object,
-                "conditions": row["conditions"],
-                "icon": row["icon"],
-                "sunrise": datetime.fromtimestamp(row["sunrise"]),
-                "sunset": datetime.fromtimestamp(row["sunset"]),
-                "air_temp_high": await cnv.temperature(row["air_temp_high"], UNIT_TEMP_CELCIUS, self._to_units_temp),
-                "air_temp_low": await cnv.temperature(row["air_temp_low"], UNIT_TEMP_CELCIUS, self._to_units_temp),
-                "air_temp_high_color": row["air_temp_high_color"],
-                "air_temp_low_color": row["air_temp_low_color"],
-                "precip_probability": row["precip_probability"],
-                "precip_icon": row["precip_icon"],
-                "precip_type": row["precip_type"],
-            }
-            items.append(ForecastData(item))
+        if forecast_type == FORECAST_TYPE_DAILY:
+            for row in forecast[FORECAST_TYPE_DAILY]:
+                item = {
+                    "timestamp": datetime.fromtimestamp(row["day_start_local"]),
+                    "conditions": row["conditions"],
+                    "icon": row["icon"],
+                    "sunrise": datetime.fromtimestamp(row["sunrise"]),
+                    "sunset": datetime.fromtimestamp(row["sunset"]),
+                    "air_temp_high": await cnv.temperature(row["air_temp_high"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                    "air_temp_low": await cnv.temperature(row["air_temp_low"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                    "air_temp_high_color": row["air_temp_high_color"],
+                    "air_temp_low_color": row["air_temp_low_color"],
+                    "precip_probability": row["precip_probability"],
+                    "precip_icon": row["precip_icon"],
+                    "precip_type": row["precip_type"],
+                }
+                items.append(ForecastDataDaily(item))
+        else:
+            cnt = 0
+            for row in forecast[FORECAST_TYPE_HOURLY]:
+                item = {
+                    "timestamp": datetime.fromtimestamp(row["time"]),
+                    "conditions": row["conditions"],
+                    "icon": row["icon"],
+                    "air_temperature": await cnv.temperature(row["air_temperature"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                    "sea_level_pressure": await cnv.pressure(row["sea_level_pressure"], UNIT_PRESSURE_MB, self._to_units_pressure),
+                    "relative_humidity": row["relative_humidity"],
+                    "precip": await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip),
+                    "precip_probability": row["precip_probability"],
+                    "precip_icon": row["precip_icon"],
+                    "precip_type": row["precip_type"],
+                    "wind_avg": await cnv.wind(row["wind_avg"], UNIT_WIND_MS, self._to_units_wind),
+                    "wind_gust": await cnv.wind(row["wind_gust"], UNIT_WIND_MS, self._to_units_wind),
+                    "wind_avg_color": row["wind_avg_color"],
+                    "wind_gust_color": row["wind_gust_color"],
+                    "wind_direction": row["wind_direction"],
+                    "wind_direction_cardinal": row["wind_direction_cardinal"],
+                    "wind_direction_icon": row["wind_direction_icon"],
+                    "uv": row["uv"],
+                    "feels_like": await cnv.temperature(row["feels_like"], UNIT_TEMP_CELCIUS, self._to_units_temp),
+                }
+                items.append(ForecastDataHourly(item))
+                # Only take the first 24 hours
+                cnt += 1
+                if cnt >= hours_to_show:
+                    break
 
         return items
         

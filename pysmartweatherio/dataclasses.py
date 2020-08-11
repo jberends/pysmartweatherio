@@ -194,8 +194,8 @@ class StationData:
         direction = direction_array[int((self._wind_bearing + 11.25) / 22.5)]
         return direction
 
-class ForecastData:
-    """A representation of Forecast Weather Data."""
+class ForecastDataDaily:
+    """A representation of Day Based Forecast Weather Data."""
 
     def __init__(self, data):
         self._timestamp = data["timestamp"]
@@ -270,3 +270,122 @@ class ForecastData:
     def precip_type(self) -> str:
         """Precipitation Icon."""
         return self._precip_type
+
+class ForecastDataHourly:
+    """A representation of Hour Based Forecast Weather Data."""
+
+    def __init__(self, data):
+        self._timestamp = data["timestamp"]
+        self._conditions = data["conditions"]
+        self._icon = data["icon"]
+        self._temperature = data["air_temperature"]
+        self._pressure = data["sea_level_pressure"]
+        self._humidity = data["relative_humidity"]
+        self._precip = data["precip"]
+        self._precip_probability = data["precip_probability"]
+        self._precip_icon = data["precip_icon"]
+        self._precip_type = data["precip_type"]
+        self._wind_avg = data["wind_avg"]
+        self._wind_gust = data["wind_gust"]
+        self._wind_avg_color = data["wind_avg_color"]
+        self._wind_gust_color = data["wind_gust_color"]
+        self._wind_bearing = data["wind_direction"]
+        self._wind_direction = data["wind_direction_cardinal"]
+        self._wind_direction_icon = data["wind_direction_icon"]
+        self._uv = data["uv"]
+        self._feels_like = data["feels_like"]
+
+    @property
+    def timestamp(self) -> dt:
+        """Forecast DateTime."""
+        return self._timestamp.isoformat()
+
+    @property
+    def conditions(self) -> str:
+        """Return condition text ."""
+        return self._conditions
+
+    @property
+    def icon(self) -> str:
+        """Condition Icon."""
+        return self._icon
+
+    @property
+    def temperature(self) -> float:
+        """Return temperature."""
+        return self._temperature
+
+    @property
+    def pressure(self) -> float:
+        """Return Sea Level Pressure."""
+        return self._pressure
+
+    @property
+    def humidity(self) -> int:
+        """Return Relative Humidity."""
+        return self._humidity
+
+    @property
+    def precip(self) -> float:
+        """Return Precipitation."""
+        return self._precip
+        
+    @property
+    def precip_probability(self) -> int:
+        """Precipitation Probability."""
+        return self._precip_probability
+
+    @property
+    def precip_icon(self) -> str:
+        """Precipitation Icon."""
+        return self._precip_icon
+
+    @property
+    def precip_type(self) -> str:
+        """Precipitation Icon."""
+        return self._precip_type
+
+    @property
+    def wind_avg(self) -> float:
+        """Return Wind Speed Average."""
+        return self._wind_avg
+
+    @property
+    def wind_gust(self) -> float:
+        """Return Wind Gust."""
+        return self._wind_gust
+
+    @property
+    def wind_avg_color(self) -> str:
+        """Return color for Wind Average."""
+        return self._wind_avg_color
+
+    @property
+    def wind_gust_color(self) -> str:
+        """Return color for Wind Gust."""
+        return self._wind_gust_color
+
+    @property
+    def wind_bearing(self) -> int:
+        """Return Wind Bearing in degrees."""
+        return self._wind_bearing
+
+    @property
+    def wind_direction(self) -> str:
+        """Return Wind Direction Cardinal."""
+        return self._wind_direction
+
+    @property
+    def wind_direction_icon(self) -> str:
+        """Return Wind Direction Icon."""
+        return self._wind_direction_icon
+
+    @property
+    def uv(self) -> float:
+        """Return UV Index."""
+        return self._uv
+
+    @property
+    def feels_like(self) -> float:
+        """Return Feels Like Temperature."""
+        return self._feels_like
