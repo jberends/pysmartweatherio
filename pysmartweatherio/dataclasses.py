@@ -199,6 +199,7 @@ class ForecastDataDaily:
 
     def __init__(self, data):
         self._timestamp = data["timestamp"]
+        self._epochtime = data["epochtime"]
         self._conditions = data["conditions"]
         self._icon = data["icon"]
         self._sunrise = data["sunrise"]
@@ -220,6 +221,11 @@ class ForecastDataDaily:
     def timestamp(self) -> dt:
         """Forecast DateTime."""
         return self._timestamp.isoformat()
+
+    @property
+    def epochtime(self):
+        """Forecast Epoch Time."""
+        return self._epochtime
 
     @property
     def conditions(self) -> str:
@@ -306,6 +312,7 @@ class ForecastDataHourly:
 
     def __init__(self, data):
         self._timestamp = data["timestamp"]
+        self._epochtime = data["epochtime"]
         self._conditions = data["conditions"]
         self._icon = data["icon"]
         self._temperature = data["air_temperature"]
@@ -331,6 +338,11 @@ class ForecastDataHourly:
     def timestamp(self) -> dt:
         """Forecast DateTime."""
         return self._timestamp.isoformat()
+
+    @property
+    def epochtime(self):
+        """Forecast Epoch Time."""
+        return self._epochtime
 
     @property
     def conditions(self) -> str:

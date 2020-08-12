@@ -281,6 +281,7 @@ class SmartWeather:
 
                 item = {
                     "timestamp": forecast_time,
+                    "epochtime": row["day_start_local"],
                     "conditions": row["conditions"],
                     "icon": row["icon"],
                     "sunrise": datetime.fromtimestamp(row["sunrise"]),
@@ -309,6 +310,7 @@ class SmartWeather:
 
                 item = {
                     "timestamp": datetime.fromtimestamp(row["time"]),
+                    "epochtime": row["time"],
                     "conditions": row["conditions"],
                     "icon": row["icon"],
                     "air_temperature": row["air_temperature"],
