@@ -176,15 +176,15 @@ class SmartWeather:
         endpoint = f"observations/station/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
 
-        row = json_data.get("station_units")
-        if row is not None:
-            from_units_temp = row["units_temp"]
-            from_units_wind = row["units_wind"]
-            from_units_precip = row["units_precip"]
-            from_units_pressure = row["units_pressure"]
-            from_units_distance = row["units_distance"]
-            from_units_direction = row["units_direction"]
-            from_units_other = row["units_other"]
+        # row = json_data.get("station_units")
+        # if row is not None:
+        #     from_units_temp = row["units_temp"]
+        #     from_units_wind = row["units_wind"]
+        #     from_units_precip = row["units_precip"]
+        #     from_units_pressure = row["units_pressure"]
+        #     from_units_distance = row["units_distance"]
+        #     from_units_direction = row["units_direction"]
+        #     from_units_other = row["units_other"]
 
         station_name = json_data.get("station_name")
 
@@ -198,45 +198,45 @@ class SmartWeather:
             item = {
                 "air_density": 0 if "air_density" not in row else row["air_density"],
                 "air_temperature": 0 if "air_temperature" not in row else
-                await cnv.temperature(row["air_temperature"], from_units_temp, self._to_units_temp),
+                await cnv.temperature(row["air_temperature"], UNIT_TEMP_CELCIUS, self._to_units_temp),
                 "brightness": 0 if "brightness" not in row else row["brightness"],
                 "dew_point": 0 if "dew_point" not in row else
-                await cnv.temperature(row["dew_point"], from_units_temp, self._to_units_temp),
+                await cnv.temperature(row["dew_point"], UNIT_TEMP_CELCIUS, self._to_units_temp),
                 "feels_like": 0 if "feels_like" not in row else
-                await cnv.temperature(row["feels_like"], from_units_temp, self._to_units_temp),
+                await cnv.temperature(row["feels_like"], UNIT_TEMP_CELCIUS, self._to_units_temp),
                 "heat_index": 0 if "heat_index" not in row else
-                await cnv.temperature(row["heat_index"], from_units_temp, self._to_units_temp),
+                await cnv.temperature(row["heat_index"], UNIT_TEMP_CELCIUS, self._to_units_temp),
                 "lightning_strike_last_time": None if "lightning_strike_last_epoch" not in row else
                 await cnv.epoch_to_datetime(row["lightning_strike_last_epoch"]),
                 "lightning_strike_last_distance": 0 if "lightning_strike_last_distance" not in row else
-                await cnv.distance(row["lightning_strike_last_distance"], from_units_distance, self._to_units_distance),
+                await cnv.distance(row["lightning_strike_last_distance"], UNIT_DISTANCE_KM, self._to_units_distance),
                 "lightning_strike_count": 0 if "lightning_strike_count" not in row else row["lightning_strike_count"],
                 "lightning_strike_count_last_3hr": 0 if "lightning_strike_count_last_3hr" not in row else row["lightning_strike_count_last_3hr"],
                 "precip_accum_last_1hr": 0 if "precip_accum_last_1hr" not in row else
-                await cnv.precip(row["precip_accum_last_1hr"], from_units_precip, self._to_units_precip),
+                await cnv.precip(row["precip_accum_last_1hr"], UNIT_PRECIP_MM, self._to_units_precip),
                 "precip_accum_local_day": 0 if "precip_accum_local_day" not in row else
-                await cnv.precip(row["precip_accum_local_day"], from_units_precip, self._to_units_precip),
+                await cnv.precip(row["precip_accum_local_day"], UNIT_PRECIP_MM, self._to_units_precip),
                 "precip_accum_local_yesterday": 0 if "precip_accum_local_yesterday" not in row else
-                await cnv.precip(row["precip_accum_local_yesterday"], from_units_precip, self._to_units_precip),
+                await cnv.precip(row["precip_accum_local_yesterday"], UNIT_PRECIP_MM, self._to_units_precip),
                 "precip_rate": 0 if "precip" not in row else
-                await cnv.precip(row["precip"], from_units_precip, self._to_units_precip) * 60,
+                await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip) * 60,
                 "precip_minutes_local_day": 0 if "precip_minutes_local_day" not in row else row["precip_minutes_local_day"],
                 "precip_minutes_local_yesterday": 0 if "precip_minutes_local_yesterday" not in row else row["precip_minutes_local_yesterday"],
                 "relative_humidity": 0 if "relative_humidity" not in row else row["relative_humidity"],
                 "station_pressure": 0 if "station_pressure" not in row else
-                await cnv.pressure(row["station_pressure"], from_units_pressure, self._to_units_pressure),
+                await cnv.pressure(row["station_pressure"], UNIT_PRESSURE_HPA, self._to_units_pressure),
                 "station_name": station_name,
                 "solar_radiation": 0 if "solar_radiation" not in row else row["solar_radiation"],
                 "timestamp": None if "timestamp" not in row else
                 await cnv.epoch_to_datetime(row["timestamp"]),
                 "uv": 0 if "uv" not in row else row["uv"],
                 "wind_avg": 0 if "wind_avg" not in row else
-                await cnv.wind(row["wind_avg"], from_units_wind, self._to_units_wind),
+                await cnv.wind(row["wind_avg"], UNIT_WIND_MS, self._to_units_wind),
                 "wind_bearing": 0 if "wind_direction" not in row else row["wind_direction"],
                 "wind_chill": 0 if "wind_chill" not in row else
-                await cnv.temperature(row["wind_chill"], from_units_temp, self._to_units_temp),
+                await cnv.temperature(row["wind_chill"], UNIT_TEMP_CELCIUS, self._to_units_temp),
                 "wind_gust": 0 if "wind_gust" not in row else
-                await cnv.wind(row["wind_gust"], from_units_wind, self._to_units_wind),
+                await cnv.wind(row["wind_gust"], UNIT_WIND_MS, self._to_units_wind),
             }
             items.append(StationData(item))
 
