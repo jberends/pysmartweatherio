@@ -28,9 +28,9 @@ class ConversionFunctions:
     async def temperature(self, value, from_unit, to_unit) -> float:
         """Convert Temperature Value."""
         if from_unit == UNIT_TEMP_CELCIUS:
-            return value if to_unit == UNIT_TEMP_CELCIUS else (value * 9 / 5) + 32
+            return round(value, 1) if to_unit == UNIT_TEMP_CELCIUS else round((value * 9 / 5) + 32, 2)
         else:
-            return value if to_unit == UNIT_TEMP_FAHRENHEIT else (value - 32) / 1.8
+            return round(value, 2) if to_unit == UNIT_TEMP_FAHRENHEIT else round((value - 32) / 1.8, 1)
 
     async def pressure(self, value, from_unit, to_unit) -> float:
         """Convert Pressure Value."""
