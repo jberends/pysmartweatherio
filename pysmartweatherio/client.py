@@ -360,14 +360,15 @@ class SmartWeather:
         except asyncio.TimeoutError:
             raise RequestError("Request to endpoint timed out: {endpoint}")
         except ClientError as err:
-            if err.message == "Unauthorized":
+            if "Unauthorized" in str(err):
                 raise InvalidApiKey("Your API Key is invalid or does not support this operation")
-            elif err.message == "Not Found":
+            elif "Not Found" in str(err):
                 raise ResultError("The Station ID does not exist")
             else:
                 raise RequestError(
                     f"Error requesting data from {endpoint}: {err}"
                 ) from None
+
         finally:
             if not use_running_session:
                 await session.close()
