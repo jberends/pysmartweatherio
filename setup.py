@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'pysmartweatherio',
   packages = ['pysmartweatherio'],
-  version = '2.0.8',
+  version = '2.0.9',
   license='MIT',
   description = 'Python Wrapper for Smart Home Weather REST API', 
   long_description=" ".join(
