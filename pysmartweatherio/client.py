@@ -98,6 +98,10 @@ class SmartWeather:
         """Returns station Weather Forecast."""
         return await self._forecast_data(FORECAST_TYPE_HOURLY, 72)
 
+    async def get_daily_forecast_raw(self) -> None:
+        """Returns raw Daily Based station Weather Forecast."""
+        return await self._raw_forecast_data(FORECAST_TYPE_DAILY, 0)
+
     async def get_units(self) -> None:
         """Returns the units used for Values."""
         if self._to_units == UNIT_SYSTEM_METRIC:
@@ -175,16 +179,6 @@ class SmartWeather:
         """Return current observation data for the Station."""
         endpoint = f"observations/station/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
-
-        # row = json_data.get("station_units")
-        # if row is not None:
-        #     from_units_temp = row["units_temp"]
-        #     from_units_wind = row["units_wind"]
-        #     from_units_precip = row["units_precip"]
-        #     from_units_pressure = row["units_pressure"]
-        #     from_units_distance = row["units_distance"]
-        #     from_units_direction = row["units_direction"]
-        #     from_units_other = row["units_other"]
 
         station_name = json_data.get("station_name")
 
@@ -339,7 +333,28 @@ class SmartWeather:
                     break
 
         return items
-        
+
+
+    async def _raw_forecast_data(self, forecast_type, hours_to_show) -> None:
+        """Return Forecast data for the Station."""
+        if self._latitude is None:
+            # _LOGGER.debug(f"LAT: {self._latitude}")
+            await self._station_information()
+
+        cnv = ConversionFunctions()
+        endpoint = f"better_forecast?station_id={self._station_id}&api_key={self._api_key}&lat={self._latitude}&lon={self._longitude}"
+        json_data = await self.async_request("get", endpoint)
+        items = []
+
+        # We need a few Items from the Current Conditions section
+        current_cond = json_data.get("current_conditions")
+        current_condition = current_cond["conditions"]
+        current_icon = current_cond["icon"]
+        today = datetime.now()
+
+        forecast = json_data.get("forecast")
+        return forecast
+
     async def async_request(self, method: str, endpoint: str) -> dict:
         """Make a request against the SmartWeather API."""
 
