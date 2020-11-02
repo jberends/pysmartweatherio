@@ -14,7 +14,6 @@ from pysmartweatherio.const import (
     BASE_URL,
     DEFAULT_TIMEOUT,
     UNIT_SYSTEM_METRIC,
-    UNIT_SYSTEM_IMPERIAL,
     UNIT_TEMP_CELCIUS,
     UNIT_TEMP_FAHRENHEIT,
     UNIT_PRESSURE_MB,
