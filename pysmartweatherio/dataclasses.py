@@ -216,6 +216,8 @@ class ForecastDataDaily:
         self._wind_bearing = data["wind_bearing"]
         self._current_condition = data["current_condition"]
         self._current_icon = data["current_icon"]
+        self._temp_high_today= data["temp_high_today"]
+        self._temp_low_today= data["temp_low_today"]
 
     @property
     def timestamp(self) -> dt:
@@ -307,6 +309,16 @@ class ForecastDataDaily:
         """Current Condition Icon."""
         return self._current_icon
 
+    @property
+    def temp_high_today(self) -> float:
+        """Return High temperature for current day."""
+        return self._temp_high_today
+
+    @property
+    def temp_low_today(self) -> float:
+        """Return Low temperature for current day."""
+        return self._temp_low_today
+
 class ForecastDataHourly:
     """A representation of Hour Based Forecast Weather Data."""
 
@@ -333,6 +345,8 @@ class ForecastDataHourly:
         self._feels_like = data["feels_like"]
         self._current_condition = data["current_condition"]
         self._current_icon = data["current_icon"]
+        self._temp_high_today= data["temp_high_today"]
+        self._temp_low_today= data["temp_low_today"]
 
     @property
     def timestamp(self) -> dt:
@@ -443,3 +457,13 @@ class ForecastDataHourly:
     def current_icon(self) -> str:
         """Current Condition Icon."""
         return self._current_icon
+
+    @property
+    def temp_high_today(self) -> float:
+        """Return High temperature for current day."""
+        return self._temp_high_today
+
+    @property
+    def temp_low_today(self) -> float:
+        """Return Low temperature for current day."""
+        return self._temp_low_today

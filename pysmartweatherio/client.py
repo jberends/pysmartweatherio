@@ -253,6 +253,11 @@ class SmartWeather:
         today = datetime.now()
 
         forecast = json_data.get("forecast")
+
+        # We also need Day hign and low Temp from Today
+        temp_high_today = forecast[FORECAST_TYPE_DAILY][0]["air_temp_high"]
+        temp_low_today = forecast[FORECAST_TYPE_DAILY][0]["air_temp_low"]
+
         if forecast_type == FORECAST_TYPE_DAILY:
             for row in forecast[FORECAST_TYPE_DAILY]:
                 # Skip over past forecasts - seems the API sometimes returns old forecasts
@@ -291,6 +296,8 @@ class SmartWeather:
                     "wind_bearing": sum_wind_bearing,
                     "current_condition": current_condition,
                     "current_icon": current_icon,
+                    "temp_high_today": temp_high_today,
+                    "temp_low_today": temp_low_today,
                 }
                 items.append(ForecastDataDaily(item))
         else:
@@ -324,6 +331,8 @@ class SmartWeather:
                     "feels_like": row["feels_like"],
                     "current_condition": current_condition,
                     "current_icon": current_icon,
+                    "temp_high_today": temp_high_today,
+                    "temp_low_today": temp_low_today,
                 }
                 items.append(ForecastDataHourly(item))
                 # Limit number of Hours
