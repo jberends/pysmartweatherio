@@ -312,9 +312,9 @@ class ForecastDataDaily:
     def current_icon(self) -> str:
         """Current Condition Icon."""
         if self._current_icon.find("cc-") > -1:
-            icon = self._icon[3:]
+            icon = self._current_icon[3:]
         else:
-            icon = self._icon
+            icon = self._current_icon
         return icon
 
     @property
@@ -469,9 +469,9 @@ class ForecastDataHourly:
     def current_icon(self) -> str:
         """Current Condition Icon."""
         if self._current_icon.find("cc-") > -1:
-            icon = self._icon[3:]
+            icon = self._current_icon[3:]
         else:
-            icon = self._icon
+            icon = self._current_icon
         return icon
 
     @property

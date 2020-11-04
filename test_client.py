@@ -123,6 +123,7 @@ async def main() -> None:
                 "WIND BEARING: " + str(row.wind_bearing) + "\n" +
                 "WIND DIRECTION: " + str(row.wind_direction) + "\n" +
                 "UV: " + str(row.uv) + "\n" +
+                "CUR ICON: " + str(row.current_icon) + "\n" +
                 "FEELS LIKE: " + str(row.feels_like) + "\n"
             )
 
