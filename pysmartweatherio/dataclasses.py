@@ -237,7 +237,11 @@ class ForecastDataDaily:
     @property
     def icon(self) -> str:
         """Condition Icon."""
-        return self._icon
+        if self._icon.find("cc-") > -1:
+            icon = self._icon[3:]
+        else:
+            icon = self._icon
+        return icon
 
     @property
     def sunrise(self) -> dt:
@@ -366,7 +370,11 @@ class ForecastDataHourly:
     @property
     def icon(self) -> str:
         """Condition Icon."""
-        return self._icon
+        if self._icon.find("cc-") > -1:
+            icon = self._icon[3:]
+        else:
+            icon = self._icon
+        return icon
 
     @property
     def temperature(self) -> float:
