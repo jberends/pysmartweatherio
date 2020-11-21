@@ -54,10 +54,11 @@ class ConversionFunctions:
         else:
             return value if to_unit == UNIT_WIND_MPH else value * 9 / 20
 
-    async def precip(self, value, from_unit, to_unit) -> float:
+    async def precip(self, value, from_unit, to_unit, current_entity=False) -> float:
         """Convert Precipitation Value."""
-        if value == 0: return None
-        
+
+        if not current_entity and value == 0: return None
+
         if from_unit == UNIT_PRECIP_MM:
             return value if to_unit == UNIT_PRECIP_MM else value * 0.04
         else:
