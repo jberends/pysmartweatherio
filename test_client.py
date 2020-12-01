@@ -1,3 +1,5 @@
+#!/bin/env python3
+
 """ The test for the API """
 """Run an example script to quickly test."""
 import asyncio
@@ -138,5 +140,5 @@ async def main() -> None:
 
     _LOGGER.info("Execution time: %s seconds", end - start)
 
-
-asyncio.run(main())
+if __name__ == '__main__':
+    asyncio.run(main())

@@ -1,3 +1,5 @@
+#!/bin/env python3
+
 import asyncio
 import aiohttp
 
@@ -9,4 +11,5 @@ async def main():
        auth = Auth(session, "http://example.com/api", "secret_access_token")
 
 
-asyncio.run(main())
+if __name__ == '__main__':
+    asyncio.run(main())
