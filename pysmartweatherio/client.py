@@ -206,13 +206,13 @@ class SmartWeather:
                 "lightning_strike_count": 0 if "lightning_strike_count" not in row else row["lightning_strike_count"],
                 "lightning_strike_count_last_3hr": 0 if "lightning_strike_count_last_3hr" not in row else row["lightning_strike_count_last_3hr"],
                 "precip_accum_last_1hr": 0 if "precip_accum_last_1hr" not in row else
-                await cnv.precip(row["precip_accum_last_1hr"], UNIT_PRECIP_MM, self._to_units_precip),
+                await cnv.precip(row["precip_accum_last_1hr"], UNIT_PRECIP_MM, self._to_units_precip, True),
                 "precip_accum_local_day": 0 if "precip_accum_local_day" not in row else
-                await cnv.precip(row["precip_accum_local_day"], UNIT_PRECIP_MM, self._to_units_precip),
+                await cnv.precip(row["precip_accum_local_day"], UNIT_PRECIP_MM, self._to_units_precip, True),
                 "precip_accum_local_yesterday": 0 if "precip_accum_local_yesterday" not in row else
-                await cnv.precip(row["precip_accum_local_yesterday"], UNIT_PRECIP_MM, self._to_units_precip),
+                await cnv.precip(row["precip_accum_local_yesterday"], UNIT_PRECIP_MM, self._to_units_precip, True),
                 "precip_rate": 0 if "precip" not in row else
-                await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip) * 60,
+                await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip, True) * 60,
                 "precip_minutes_local_day": 0 if "precip_minutes_local_day" not in row else row["precip_minutes_local_day"],
                 "precip_minutes_local_yesterday": 0 if "precip_minutes_local_yesterday" not in row else row["precip_minutes_local_yesterday"],
                 "relative_humidity": 0 if "relative_humidity" not in row else row["relative_humidity"],
