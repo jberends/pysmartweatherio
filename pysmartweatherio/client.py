@@ -1,15 +1,14 @@
 """Define a client to interact with Weatherflow SmartWeather."""
 import asyncio
 import logging
-from typing import Optional
 from datetime import datetime
+from pathlib import Path
+from typing import Optional, Union, List, Dict, Iterable, Any
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError
+from envparse import Env, env
 
-from pysmartweatherio.errors import InvalidApiKey, RequestError, ResultError
-from pysmartweatherio.helper_functions import ConversionFunctions
-from pysmartweatherio.dataclasses import StationData, ForecastDataDaily, ForecastDataHourly
 from pysmartweatherio.const import (
     BASE_URL,
     DEFAULT_TIMEOUT,
@@ -34,6 +33,9 @@ from pysmartweatherio.const import (
     FORECAST_TYPE_DAILY,
     FORECAST_TYPE_HOURLY,
 )
+from pysmartweatherio.dataclasses import StationData, ForecastDataDaily, ForecastDataHourly
+from pysmartweatherio.errors import InvalidApiKey, RequestError, ResultError
+from pysmartweatherio.helper_functions import ConversionFunctions
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,13 +44,13 @@ class SmartWeather:
     """SmartWeather Communication Client."""
 
     def __init__(
-        self,
-        api_key: str,
-        station_id: int,
-        to_units: str = UNIT_SYSTEM_METRIC,
-        to_wind_unit: str = UNIT_WIND_MS,
-        session: Optional[ClientSession] = None,
-        ):
+            self,
+            api_key: str,
+            station_id: int,
+            to_units: str = UNIT_SYSTEM_METRIC,
+            to_wind_unit: str = UNIT_WIND_MS,
+            session: Optional[ClientSession] = None,
+    ):
         self._api_key = api_key
         self._station_id = station_id
         self._to_units = to_units
@@ -73,35 +75,67 @@ class SmartWeather:
             self._to_units_precip = UNIT_PRECIP_IN
             self._to_units_distance = UNIT_DISTANCE_MI
 
-    async def get_station_name(self) -> None:
+    @classmethod
+    def from_env(cls, path: Optional[Union[str,Path]] = None) -> "SmartWeather":
+        """
+        A SmartWeather Communication Client, initialised from an `.env` file.
+
+        An `.env.` file can be provided in the root of the project. It will search for it in parent directories.
+
+        The env file should contain at least the following elements:
+        ```
+        # retrieve the API key: https://tempestwx.com/settings/tokens
+        # login with your tempest account and create a personal access token.
+        API_KEY="<your API key from>"
+
+        # retrieve your station id from https://tempestwx.com/settings/stations
+        # - click on your station and copy the <station_id> number from the address bar
+        # - the URL in the address bar looks like: https://tempestwx.com/settings/station/<station_id>
+        STATION_ID=<your station id>
+        ```
+
+        :param path: optional path (or filename) to the .env file.
+        """
+        # read the environmentfile into the os environments.
+        Env.read_envfile(str(path))
+
+        # retrieve the environment settings for the various settings from the os and perform casting.
+        api_key: str = env("API_KEY")
+        station_id: int = env.int("STATION_ID")
+        to_units: str = env("TO_UNITS", default=UNIT_SYSTEM_METRIC)
+        to_wind_unit: str = env("TO_WIND_UNIT", default=UNIT_WIND_MS)
+
+        return cls(api_key=api_key, station_id=station_id, to_units=to_units, to_wind_unit=to_wind_unit)
+
+    async def get_station_name(self) -> str:
         """Returns the Station Name."""
         return await self._station_name_by_station_id()
 
-    async def get_station_data(self) -> None:
+    async def get_station_data(self) -> Iterable[dict]:
         """Returns current sensor data."""
         return await self._current_station_data()
 
-    async def get_station_hardware(self) -> None:
+    async def get_station_hardware(self) -> Iterable[dict]:
         """Returns station hardware data."""
         return await self._station_information()
 
-    async def get_forecast(self, forecast_type=FORECAST_TYPE_DAILY, hours_to_show=24) -> None:
+    async def get_forecast(self, forecast_type=FORECAST_TYPE_DAILY, hours_to_show=24) -> Iterable[dict]:
         """Returns station Weather Forecast."""
         return await self._forecast_data(forecast_type, hours_to_show)
 
-    async def get_daily_forecast(self) -> None:
+    async def get_daily_forecast(self) -> Iterable[dict]:
         """Returns station Weather Forecast."""
         return await self._forecast_data(FORECAST_TYPE_DAILY, 0)
 
-    async def get_hourly_forecast(self) -> None:
+    async def get_hourly_forecast(self) -> Iterable[dict]:
         """Returns station Weather Forecast."""
         return await self._forecast_data(FORECAST_TYPE_HOURLY, 72)
 
-    async def get_daily_forecast_raw(self) -> None:
+    async def get_daily_forecast_raw(self) -> Dict:
         """Returns raw Daily Based station Weather Forecast."""
         return await self._raw_forecast_data(FORECAST_TYPE_DAILY, 0)
 
-    async def get_units(self) -> None:
+    async def get_units(self) -> dict:
         """Returns the units used for Values."""
         if self._to_units == UNIT_SYSTEM_METRIC:
             unit_temp = "°C"
@@ -127,11 +161,11 @@ class SmartWeather:
         }
         return units
 
-    async def _station_information(self) -> None:
+    async def _station_information(self) -> Iterable[Dict]:
         """Return Information about the station HW."""
         endpoint = f"stations/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
-        
+
         for row in json_data["stations"]:
             items = {}
             name = row["name"]
@@ -166,15 +200,14 @@ class SmartWeather:
             if items:
                 return items
 
-
-    async def _station_name_by_station_id(self) -> None:
+    async def _station_name_by_station_id(self) -> str:
         """Return Station name from the Station ID."""
         endpoint = f"observations/station/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
 
         return self._station_id if json_data.get("station_name") is None else json_data.get("station_name")
 
-    async def _current_station_data(self) -> None:
+    async def _current_station_data(self) -> Iterable[Dict]:
         """Return current observation data for the Station."""
         endpoint = f"observations/station/{self._station_id}?api_key={self._api_key}"
         json_data = await self.async_request("get", endpoint)
@@ -186,7 +219,7 @@ class SmartWeather:
         observations = json_data.get("obs")
         if observations is None:
             observations = {"nodata": "NoData"}
-        
+
         for row in observations:
             item = {
                 "air_density": 0 if "air_density" not in row else row["air_density"],
@@ -204,17 +237,20 @@ class SmartWeather:
                 "lightning_strike_last_distance": 0 if "lightning_strike_last_distance" not in row else
                 await cnv.distance(row["lightning_strike_last_distance"], UNIT_DISTANCE_KM, self._to_units_distance),
                 "lightning_strike_count": 0 if "lightning_strike_count" not in row else row["lightning_strike_count"],
-                "lightning_strike_count_last_3hr": 0 if "lightning_strike_count_last_3hr" not in row else row["lightning_strike_count_last_3hr"],
+                "lightning_strike_count_last_3hr": 0 if "lightning_strike_count_last_3hr" not in row else row[
+                    "lightning_strike_count_last_3hr"],
                 "precip_accum_last_1hr": 0 if "precip_accum_last_1hr" not in row else
-                await cnv.precip(row["precip_accum_last_1hr"], UNIT_PRECIP_MM, self._to_units_precip),
+                await cnv.precip(row["precip_accum_last_1hr"], UNIT_PRECIP_MM, self._to_units_precip, True),
                 "precip_accum_local_day": 0 if "precip_accum_local_day" not in row else
-                await cnv.precip(row["precip_accum_local_day"], UNIT_PRECIP_MM, self._to_units_precip),
+                await cnv.precip(row["precip_accum_local_day"], UNIT_PRECIP_MM, self._to_units_precip, True),
                 "precip_accum_local_yesterday": 0 if "precip_accum_local_yesterday" not in row else
-                await cnv.precip(row["precip_accum_local_yesterday"], UNIT_PRECIP_MM, self._to_units_precip),
+                await cnv.precip(row["precip_accum_local_yesterday"], UNIT_PRECIP_MM, self._to_units_precip, True),
                 "precip_rate": 0 if "precip" not in row else
-                await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip) * 60,
-                "precip_minutes_local_day": 0 if "precip_minutes_local_day" not in row else row["precip_minutes_local_day"],
-                "precip_minutes_local_yesterday": 0 if "precip_minutes_local_yesterday" not in row else row["precip_minutes_local_yesterday"],
+                await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip, True) * 60,
+                "precip_minutes_local_day": 0 if "precip_minutes_local_day" not in row else row[
+                    "precip_minutes_local_day"],
+                "precip_minutes_local_yesterday": 0 if "precip_minutes_local_yesterday" not in row else row[
+                    "precip_minutes_local_yesterday"],
                 "relative_humidity": 0 if "relative_humidity" not in row else row["relative_humidity"],
                 "station_pressure": 0 if "station_pressure" not in row else
                 await cnv.pressure(row["station_pressure"], UNIT_PRESSURE_HPA, self._to_units_pressure),
@@ -235,7 +271,7 @@ class SmartWeather:
 
         return items
 
-    async def _forecast_data(self, forecast_type, hours_to_show) -> None:
+    async def _forecast_data(self, forecast_type, hours_to_show) -> Iterable[Dict]:
         """Return Forecast data for the Station."""
         if self._latitude is None:
             # _LOGGER.debug(f"LAT: {self._latitude}")
@@ -314,7 +350,8 @@ class SmartWeather:
                     "conditions": row["conditions"],
                     "icon": row["icon"],
                     "air_temperature": row["air_temperature"],
-                    "sea_level_pressure": await cnv.pressure(row["sea_level_pressure"], UNIT_PRESSURE_MB, self._to_units_pressure),
+                    "sea_level_pressure": await cnv.pressure(row["sea_level_pressure"], UNIT_PRESSURE_MB,
+                                                             self._to_units_pressure),
                     "relative_humidity": row["relative_humidity"],
                     "precip": await cnv.precip(row["precip"], UNIT_PRECIP_MM, self._to_units_precip),
                     "precip_probability": row["precip_probability"],
@@ -342,8 +379,7 @@ class SmartWeather:
 
         return items
 
-
-    async def _raw_forecast_data(self, forecast_type, hours_to_show) -> None:
+    async def _raw_forecast_data(self, forecast_type, hours_to_show) -> Any:
         """Return Forecast data for the Station."""
         if self._latitude is None:
             # _LOGGER.debug(f"LAT: {self._latitude}")
@@ -375,7 +411,7 @@ class SmartWeather:
 
         try:
             async with session.request(
-                method, f"{BASE_URL}/{endpoint}"
+                    method, f"{BASE_URL}/{endpoint}"
             ) as resp:
                 resp.raise_for_status()
                 data = await resp.json()

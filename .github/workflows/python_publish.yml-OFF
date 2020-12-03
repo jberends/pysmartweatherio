@@ -1,0 +1,31 @@
+name: Release pysmartweatherio
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.8'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine>=2.0.0
+    - name: Build and publish
+      # to automatically upload a python package on release
+      # retrieve a user access token from PyPI for this project
+      # add the token to the github secrets (navigate Settings > Secrets)
+      # use the name `PYPI_TOKEN`
+      env:
+        TWINE_USERNAME: '__token__'
+        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        TWINE_NON_INTERACTIVE: '1'
+      run: |
+        python setup.py sdist bdist_wheel --universal
+        twine upload dist/pysmartweatherio-* --disable-progress-bar
